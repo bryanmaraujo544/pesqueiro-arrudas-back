@@ -22,6 +22,10 @@ class ProductsRepository {
     });
   }
 
+  async delete(producId) {
+    await ProductModel.deleteOne({ _id: producId });
+  }
+
   async findByName(name) {
     const product = await ProductModel.find({ name });
     return product;

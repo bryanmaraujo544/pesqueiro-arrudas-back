@@ -9,7 +9,6 @@ class ProductController {
 
   async store(req, res) {
     const { name, imageURL, unitPrice, amount, category } = req.body;
-    console.log(name, imageURL, unitPrice, amount, category);
 
     const hasFieldEmpty = someIsEmpty([name, unitPrice, amount, category]);
     if (hasFieldEmpty) {
@@ -19,14 +18,25 @@ class ProductController {
     }
 
     const nameIsInUse = await ProductsRepository.findByName(name);
-    console.log({ nameIsInUse });
-    console.log(!![]);
     if (nameIsInUse.length > 0) {
       return res.status(400).json({ message: 'Nome já está em uso.' });
     }
 
     ProductsRepository.create({ name, category, unitPrice, amount, imageURL });
     res.status(200).json({ message: 'Produto criado! ' });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        message: 'O ID do produto precisa ser informado para sua deleção.',
+      });
+    }
+
+    await ProductsRepository.delete(id);
+    res.status(200).json({ message: 'Produto deletado' });
   }
 }
 
