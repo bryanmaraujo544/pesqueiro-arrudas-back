@@ -12,18 +12,27 @@ class ProductController {
 
     const hasFieldEmpty = someIsEmpty([name, unitPrice, amount, category]);
     if (hasFieldEmpty) {
-      return res
-        .status(400)
-        .json({ message: 'Campos obrigatórios foram esquecidos.' });
+      return res.status(400).json({
+        message: 'Campos obrigatórios foram esquecidos.',
+        product: null,
+      });
     }
 
     const nameIsInUse = await ProductsRepository.findByName(name);
     if (nameIsInUse.length > 0) {
-      return res.status(400).json({ message: 'Nome já está em uso.' });
+      return res
+        .status(400)
+        .json({ message: 'Nome já está em uso.', product: null });
     }
 
-    ProductsRepository.create({ name, category, unitPrice, amount, imageURL });
-    res.status(200).json({ message: 'Produto criado! ' });
+    const newProduct = await ProductsRepository.create({
+      name,
+      category,
+      unitPrice,
+      amount,
+      imageURL,
+    });
+    res.status(200).json({ message: 'Produto criado!', product: newProduct });
   }
 
   async delete(req, res) {

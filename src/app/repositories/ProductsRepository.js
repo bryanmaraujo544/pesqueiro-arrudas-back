@@ -6,7 +6,7 @@ class ProductsRepository {
     return products;
   }
 
-  create({ name, category, unitPrice, amount, imageURL }) {
+  async create({ name, category, unitPrice, amount, imageURL }) {
     const newProduct = new ProductModel({
       name,
       category,
@@ -15,11 +15,8 @@ class ProductsRepository {
       imageURL,
     });
 
-    newProduct.save((err) => {
-      if (err) {
-        console.log('err ocurred creating new product document', err);
-      }
-    });
+    const product = await newProduct.save();
+    return product;
   }
 
   async delete(producId) {
