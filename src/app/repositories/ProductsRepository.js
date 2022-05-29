@@ -21,6 +21,11 @@ class ProductsRepository {
       }
     });
   }
+
+  async findByName(name) {
+    const product = await ProductModel.find({ name });
+    return product;
+  }
 }
 
 module.exports = new ProductsRepository();
