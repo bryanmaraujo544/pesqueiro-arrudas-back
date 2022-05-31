@@ -54,6 +54,13 @@ class ProductController {
     const { id } = req.params;
     const { name, imageURL, unitPrice, amount, category } = req.body;
 
+    if (!imageURL && imageURL !== '') {
+      return res.status(400).json({
+        message: 'Campos obrigatórios foram esquecidos.',
+        product: null,
+      });
+    }
+
     const hasFieldEmpty = someIsEmpty([name, unitPrice, amount, category]);
 
     if (hasFieldEmpty) {
@@ -67,7 +74,9 @@ class ProductController {
     const productWithSameNameId = productWithSameName._id.valueOf();
 
     if (productWithSameName && productWithSameNameId !== id) {
-      return res.status(400).json({ message: 'O nome já está em uso' });
+      return res
+        .status(400)
+        .json({ message: 'O nome já está em uso', product: null });
     }
 
     const updatedProduct = await ProductsRepository.update({
@@ -79,7 +88,7 @@ class ProductController {
       imageURL,
     });
 
-    return res.json({ updated: updatedProduct });
+    return res.json({ message: 'Produto atualizado', product: updatedProduct });
   }
 }
 

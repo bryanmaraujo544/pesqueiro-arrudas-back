@@ -35,19 +35,31 @@ class ProductsRepository {
   }
 
   async update({ id, name, category, unitPrice, amount, imageURL }) {
-    const updatedProducts = await ProductModel.updateOne(
-      { _id: id },
-      {
-        name,
-        category,
-        unitPrice,
-        amount,
-        imageURL,
-      }
-    );
+    const oldProduct = await ProductModel.findOne({ _id: id });
+
+    oldProduct.overwrite({
+      name,
+      category,
+      unitPrice,
+      amount,
+      imageURL,
+    });
+
+    const updatedProduct = await oldProduct.save();
+
+    // const updatedProducts = await ProductModel.updateOne(
+    //   { _id: id },
+    //   {
+    //     name,
+    //     category,
+    //     unitPrice,
+    //     amount,
+    //     imageURL,
+    //   }
+    // );
 
     // const product = await updatedProducts.save();
-    return updatedProducts;
+    return updatedProduct;
   }
 }
 
