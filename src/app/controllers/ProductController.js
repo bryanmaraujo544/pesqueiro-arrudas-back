@@ -1,3 +1,5 @@
+// const { O} = require('mongoose');
+
 const ProductsRepository = require('../repositories/ProductsRepository');
 const { someIsEmpty } = require('../utils/someIsEmpty');
 
@@ -52,13 +54,14 @@ class ProductController {
     const { id } = req.params;
     const { name, imageURL, unitPrice, amount, category } = req.body;
 
-    const hasFieldEmpty = someIsEmpty([
-      name,
-      imageURL,
-      unitPrice,
-      amount,
-      category,
-    ]);
+    if (!imageURL && imageURL !== '') {
+      return res.status(400).json({
+        message: 'Campos obrigatórios foram esquecidos.',
+        product: null,
+      });
+    }
+
+    const hasFieldEmpty = someIsEmpty([name, unitPrice, amount, category]);
 
     if (hasFieldEmpty) {
       return res.status(400).json({
@@ -67,11 +70,13 @@ class ProductController {
       });
     }
 
-    const [nameIsInUse] = await ProductsRepository.findByName(name);
+    const [productWithSameName] = await ProductsRepository.findByName(name);
+    const productWithSameNameId = productWithSameName._id.valueOf();
 
-    // Probably here has the error that the product cannot be updated
-    if (nameIsInUse && nameIsInUse._id !== id) {
-      return res.status(400).json({ message: 'O nome já está em uso' });
+    if (productWithSameName && productWithSameNameId !== id) {
+      return res
+        .status(400)
+        .json({ message: 'O nome já está em uso', product: null });
     }
 
     const updatedProduct = await ProductsRepository.update({
@@ -83,7 +88,7 @@ class ProductController {
       imageURL,
     });
 
-    return res.json({ updated: updatedProduct });
+    return res.json({ message: 'Produto atualizado', product: updatedProduct });
   }
 }
 
