@@ -68,12 +68,8 @@ class ProductController {
     }
 
     const [nameIsInUse] = await ProductsRepository.findByName(name);
-    const unchanged = nameIsInUse._id;
-    // const nameId = unchanged.replace(/\D/g, '');
-    // console.log(nameIsInUse._id);
-    // console.log(id);
-    console.log({ unchanged });
 
+    // Probably here has the error that the product cannot be updated
     if (nameIsInUse && nameIsInUse._id !== id) {
       return res.status(400).json({ message: 'O nome já está em uso' });
     }
