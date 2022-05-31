@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const commandSchema = new Schema({
-  createdAt: Date,
+  createdAt: String,
   table: {
     type: String,
     required: true,
