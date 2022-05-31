@@ -36,7 +36,7 @@ class ProductsRepository {
 
   async update({ id, name, category, unitPrice, amount, imageURL }) {
     const updatedProducts = await ProductModel.updateOne(
-      { id },
+      { _id: id },
       {
         name,
         category,
@@ -46,8 +46,8 @@ class ProductsRepository {
       }
     );
 
-    const product = await updatedProducts.save();
-    return product;
+    // const product = await updatedProducts.save();
+    return updatedProducts;
   }
 }
 
