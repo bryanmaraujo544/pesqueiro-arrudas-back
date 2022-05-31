@@ -65,9 +65,7 @@ class ProductController {
 
     const [productWithSameName] = await ProductsRepository.findByName(name);
     const productWithSameNameId = productWithSameName._id.valueOf();
-    // console.log('ID OF OBJECT OF SAME NAME', nameIsInUse._id.valueOf());
 
-    // Probably here has the error that the product cannot be updated
     if (productWithSameName && productWithSameNameId !== id) {
       return res.status(400).json({ message: 'O nome já está em uso' });
     }
