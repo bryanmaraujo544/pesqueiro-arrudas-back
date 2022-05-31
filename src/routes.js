@@ -11,5 +11,6 @@ router.get('/', (req, res) => {
 router.get('/products', ProductController.index);
 router.post('/products', ProductController.store);
 router.delete('/products/:id', ProductController.delete);
+router.put('/products/:id', ProductController.update);
 
 module.exports = router;

@@ -47,6 +47,48 @@ class ProductController {
     await ProductsRepository.delete(id);
     res.status(200).json({ message: 'Produto deletado' });
   }
+
+  async update(req, res) {
+    const { id } = req.params;
+    const { name, imageURL, unitPrice, amount, category } = req.body;
+
+    const hasFieldEmpty = someIsEmpty([
+      name,
+      imageURL,
+      unitPrice,
+      amount,
+      category,
+    ]);
+
+    if (hasFieldEmpty) {
+      return res.status(400).json({
+        message: 'Campos obrigatórios foram esquecidos.',
+        product: null,
+      });
+    }
+
+    const [nameIsInUse] = await ProductsRepository.findByName(name);
+    const unchanged = nameIsInUse._id;
+    // const nameId = unchanged.replace(/\D/g, '');
+    // console.log(nameIsInUse._id);
+    // console.log(id);
+    console.log({ unchanged });
+
+    if (nameIsInUse && nameIsInUse._id !== id) {
+      return res.status(400).json({ message: 'O nome já está em uso' });
+    }
+
+    const updatedProduct = await ProductsRepository.update({
+      id,
+      name,
+      category,
+      unitPrice,
+      amount,
+      imageURL,
+    });
+
+    return res.json({ updated: updatedProduct });
+  }
 }
 
 module.exports = new ProductController();
