@@ -20,8 +20,8 @@ class ProductsRepository {
     return product;
   }
 
-  async delete(producId) {
-    await ProductModel.deleteOne({ _id: producId });
+  async delete(productId) {
+    await ProductModel.deleteOne({ _id: productId });
   }
 
   async findByName(name) {
@@ -46,19 +46,6 @@ class ProductsRepository {
     });
 
     const updatedProduct = await oldProduct.save();
-
-    // const updatedProducts = await ProductModel.updateOne(
-    //   { _id: id },
-    //   {
-    //     name,
-    //     category,
-    //     unitPrice,
-    //     amount,
-    //     imageURL,
-    //   }
-    // );
-
-    // const product = await updatedProducts.save();
     return updatedProduct;
   }
 }
