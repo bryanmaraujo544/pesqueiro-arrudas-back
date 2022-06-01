@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
   res.send('oioioi');
 });
 
-router.post('/auth', AuthController.index);
+router.post('/auth/login', AuthController.index);
 
 router.get('/products', ProductController.index);
 router.post('/products', ProductController.store);
