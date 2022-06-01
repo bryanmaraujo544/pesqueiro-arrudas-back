@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { findByName } = require('../repositories/ProductsRepository');
+// const { findByName } = require('../repositories/ProductsRepository');
+
 const { Schema } = mongoose;
 
 const productSchema = new Schema({
