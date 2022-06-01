@@ -1,10 +1,8 @@
 const { Router } = require('express');
 const ProductController = require('./app/controllers/ProductController');
-<<<<<<< HEAD
 const AuthController = require('./app/controllers/AuthController');
-=======
 const CommandController = require('./app/controllers/CommandController');
->>>>>>> a5bf5da7147c053fb5652c0f549fe93901219fc8
+
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -13,12 +11,9 @@ router.get('/', (req, res) => {
   res.send('oioioi');
 });
 
-<<<<<<< HEAD
 router.post('/auth/login', AuthController.index);
 
-=======
 // Products Routes
->>>>>>> a5bf5da7147c053fb5652c0f549fe93901219fc8
 router.get('/products', ProductController.index);
 router.post('/products', ProductController.store);
 router.delete('/products/:id', ProductController.delete);
