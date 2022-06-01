@@ -17,8 +17,7 @@ const commandSchema = new Schema({
     {
       name: {
         type: String,
-        // required: true,
-        // unique: false,
+        required: true,
       },
       category: String,
       unitPrice: {
