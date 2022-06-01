@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { Schema } = mongoose;
 
 const commandSchema = new Schema({
@@ -13,6 +14,8 @@ const commandSchema = new Schema({
     required: true,
   },
   fishingType: String,
+  total: Number,
+  isActive: { type: String, default: true },
   products: [
     {
       name: {
@@ -30,7 +33,6 @@ const commandSchema = new Schema({
       },
     },
   ],
-  total: Number,
 });
 
 const Command = mongoose.model('Command', commandSchema);
