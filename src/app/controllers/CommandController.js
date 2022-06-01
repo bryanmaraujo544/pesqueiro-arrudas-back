@@ -1,4 +1,5 @@
 const CommandsRepository = require('../repositories/CommandsRepository');
+const { someIsEmpty } = require('../utils/someIsEmpty');
 
 class CommandController {
   async index(req, res) {
@@ -21,8 +22,8 @@ class CommandController {
       });
     }
 
+    // Fix this. If a table was already created at other day, it cannot be created again.
     const tableExists = await CommandsRepository.findByTable({ table });
-    console.log(tableExists);
     if (tableExists) {
       return res.status(400).json({
         message: 'O nome da mesa já está em uso.',
@@ -42,7 +43,18 @@ class CommandController {
 
   update() {}
 
-  delete() {}
+  async delete(req, res) {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        message: 'O ID da comanda precisa ser informado para sua deleção.',
+      });
+    }
+
+    await CommandsRepository.delete(id);
+    res.status(200).json({ message: 'Comanda deletada' });
+  }
 }
 
 module.exports = new CommandController();
