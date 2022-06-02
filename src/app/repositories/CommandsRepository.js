@@ -28,7 +28,7 @@ class CommandRepository {
   }
 
   async delete(commandId) {
-    console.log({ commandId });
+    await CommandModel.deleteOne({ _id: commandId });
   }
 }
 
