@@ -7,7 +7,7 @@ class CommandRepository {
   }
 
   async findByTable({ table }) {
-    const product = await CommandModel.findOne({ table });
+    const product = await CommandModel.findOne({ table, isActive: true });
     return product;
   }
 

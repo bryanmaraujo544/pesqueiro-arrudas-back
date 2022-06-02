@@ -8,8 +8,6 @@ class CommandController {
   }
 
   async store(req, res) {
-    // TODO: If a product is already in the command, dont let the user add it.
-    // Add fishingType as a product
     const { table, waiter, fishingType } = req.body;
 
     const hasFieldEmpty = someIsEmpty([table, waiter, fishingType]);
@@ -20,7 +18,7 @@ class CommandController {
       });
     }
 
-    // Fix this. If a table was already created at other day, it cannot be created again.
+    // If one command that it's active has the same name, we throw an error
     const tableExists = await CommandsRepository.findByTable({ table });
     if (tableExists) {
       return res.status(400).json({
@@ -29,10 +27,7 @@ class CommandController {
       });
     }
 
-    const createdAt = new Date().toISOString();
-
     const newCommand = await CommandsRepository.create({
-      createdAt,
       table,
       waiter,
       fishingType,
