@@ -35,7 +35,35 @@ class CommandController {
     return res.json({ message: 'Comanda adicionada', command: newCommand });
   }
 
-  update() {}
+  async update(req, res) {
+    const { id } = req.params;
+    const { table, waiter, fishingType, total, isActive, products } = req.body;
+
+    if (!id) {
+      return res
+        .status(400)
+        .json({ message: 'ID é necessário. ', command: null });
+    }
+
+    const commandExists = await CommandsRepository.findById(id);
+    if (!commandExists) {
+      return res
+        .status(400)
+        .json({ message: 'Esta comanda não existe', command: null });
+    }
+
+    const updatedCommand = await CommandsRepository.update({
+      _id: id,
+      table,
+      waiter,
+      fishingType,
+      total,
+      isActive,
+      products,
+    });
+
+    res.json({ message: 'Comanda atualizada', command: updatedCommand });
+  }
 
   async delete(req, res) {
     const { id } = req.params;
