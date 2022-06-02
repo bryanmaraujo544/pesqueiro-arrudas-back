@@ -38,6 +38,7 @@ class CommandController {
   async update(req, res) {
     const { id } = req.params;
     const { table, waiter, fishingType, total, isActive, products } = req.body;
+    console.log({ table, waiter, fishingType, total, isActive, products });
 
     if (!id) {
       return res
@@ -51,6 +52,16 @@ class CommandController {
         .status(400)
         .json({ message: 'Esta comanda não existe', command: null });
     }
+
+    const tableExists = await CommandsRepository.findByTable({ table });
+    console.log({ tableExists });
+    if (tableExists && tableExists._id.valueOf() !== id) {
+      return res
+        .status(400)
+        .json({ message: 'Já existe uma mesa com este nome', command: null });
+    }
+
+    // TODO: verify the amount of products added in stock
 
     const updatedCommand = await CommandsRepository.update({
       _id: id,
