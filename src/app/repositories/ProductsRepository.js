@@ -3,7 +3,6 @@ const ProductModel = require('../models/product');
 class ProductsRepository {
   async findAll() {
     const products = await ProductModel.find({});
-    console.log({ products });
     return products;
   }
 
