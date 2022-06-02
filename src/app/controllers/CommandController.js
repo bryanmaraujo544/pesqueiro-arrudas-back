@@ -88,6 +88,20 @@ class CommandController {
     await CommandsRepository.delete(id);
     res.status(200).json({ message: 'Comanda deletada' });
   }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const command = await CommandsRepository.findById(id);
+
+    if (!command) {
+      return res
+        .status(404)
+        .json({ message: 'Comanda não encontrada', command: null });
+    }
+
+    return res.json({ message: 'Comanda encontrada ', command });
+  }
 }
 
 module.exports = new CommandController();

@@ -24,5 +24,6 @@ router.get('/commands', CommandController.index);
 router.post('/commands', CommandController.store);
 router.delete('/commands/:id', CommandController.delete);
 router.put('/commands/:id', CommandController.update);
+router.get('/commands/:id', CommandController.show);
 
 module.exports = router;

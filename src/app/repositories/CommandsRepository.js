@@ -61,10 +61,13 @@ class CommandRepository {
   }
 
   async findById(id) {
+    console.log(id);
     try {
       const command = await CommandModel.findOne({ _id: id });
+      console.log(command);
       return command;
     } catch (error) {
+      console.log(error.message);
       return null;
     }
   }
