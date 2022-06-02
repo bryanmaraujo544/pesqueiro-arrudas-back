@@ -10,15 +10,6 @@ class CommandController {
   async store(req, res) {
     // TODO: If a product is already in the command, dont let the user add it.
     // Add fishingType as a product
-    const createdAt = new Date().toISOString();
-    const products = [
-      {
-        name: 'fdfd',
-        amount: 4,
-        unitPrice: 4.5,
-      },
-    ];
-
     const { table, waiter, fishingType } = req.body;
 
     const hasFieldEmpty = someIsEmpty([table, waiter, fishingType]);
@@ -38,12 +29,13 @@ class CommandController {
       });
     }
 
+    const createdAt = new Date().toISOString();
+
     const newCommand = await CommandsRepository.create({
       createdAt,
       table,
       waiter,
       fishingType,
-      products,
     });
     return res.json({ message: 'Comanda adicionada', command: newCommand });
   }

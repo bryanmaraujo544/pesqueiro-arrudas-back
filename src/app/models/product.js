@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const { findByName } = require('../repositories/ProductsRepository');
+
 const { Schema } = mongoose;
 
 const productSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
+    // unique: true,
   },
   imageURL: String,
   category: String,

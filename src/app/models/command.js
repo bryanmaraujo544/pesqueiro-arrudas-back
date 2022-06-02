@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const commandSchema = new Schema({
-  createdAt: String,
+  createdAt: {
+    type: Date,
+    default: () => Date.now(),
+  },
   table: {
     type: String,
     required: true,
@@ -14,25 +17,9 @@ const commandSchema = new Schema({
     required: true,
   },
   fishingType: String,
-  total: Number,
+  total: { type: Number, default: 0 },
   isActive: { type: String, default: true },
-  products: [
-    {
-      name: {
-        type: String,
-        required: true,
-      },
-      category: String,
-      unitPrice: {
-        type: Number,
-        required: true,
-      },
-      amount: {
-        type: Number,
-        min: 0,
-      },
-    },
-  ],
+  products: [],
 });
 
 const Command = mongoose.model('Command', commandSchema);

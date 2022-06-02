@@ -11,21 +11,24 @@ class CommandRepository {
     return product;
   }
 
-  async create({ createdAt, table, waiter, fishingType, products }) {
-    const newCommand = new CommandModel({
-      createdAt,
-      table,
-      waiter,
-      fishingType,
-      products,
-    });
+  async create({ table, waiter, fishingType }) {
+    try {
+      const newCommand = new CommandModel({
+        table,
+        waiter,
+        fishingType,
+      });
 
-    const command = await newCommand.save();
-    return command;
+      const command = await newCommand.save();
+      return command;
+    } catch (error) {
+      console.log(error?.message);
+      return null;
+    }
   }
 
   async delete(commandId) {
-    await CommandModel.deleteOne({ _id: commandId });
+    console.log({ commandId });
   }
 }
 
