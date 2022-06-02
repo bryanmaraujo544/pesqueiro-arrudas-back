@@ -53,13 +53,6 @@ class ProductController {
   async update(req, res) {
     const { id } = req.params;
     const { name, imageURL, unitPrice, amount, category } = req.body;
-    console.log({
-      name,
-      imageURL,
-      unitPrice,
-      amount,
-      category,
-    });
 
     if (!imageURL && imageURL !== '') {
       return res.status(400).json({

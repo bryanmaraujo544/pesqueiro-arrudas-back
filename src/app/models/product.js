@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
+<<<<<<< HEAD
 // const { findByName } = require('../repositories/ProductsRepository');
+=======
+>>>>>>> 683a39cd768f2f6241787b709d91b9c804d5dd87
 
 const { Schema } = mongoose;
 
@@ -7,7 +10,7 @@ const productSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
+    // unique: true,
   },
   imageURL: String,
   category: String,
