@@ -61,7 +61,7 @@ class CommandController {
 
     // TODO: verify the amount of products added in stock
 
-    const commandTotal = products.reduce(
+    const commandTotal = products?.reduce(
       (amount, current) => amount + current.amount * current.unitPrice,
       0
     );
