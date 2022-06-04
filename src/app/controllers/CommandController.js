@@ -38,7 +38,6 @@ class CommandController {
   async update(req, res) {
     const { id } = req.params;
     const { table, waiter, fishingType, total, isActive, products } = req.body;
-    console.log({ table, waiter, fishingType, total, isActive, products });
 
     if (!id) {
       return res
@@ -54,7 +53,6 @@ class CommandController {
     }
 
     const tableExists = await CommandsRepository.findByTable({ table });
-    console.log({ tableExists });
     if (tableExists && tableExists._id.valueOf() !== id) {
       return res
         .status(400)
@@ -72,6 +70,10 @@ class CommandController {
       isActive,
       products,
     });
+
+    if (updatedCommand === null) {
+      return res.status(500).json({ message: 'Erro Interno', command: null });
+    }
 
     res.json({ message: 'Comanda atualizada', command: updatedCommand });
   }

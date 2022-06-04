@@ -19,7 +19,17 @@ const commandSchema = new Schema({
   fishingType: String,
   total: { type: Number, default: 0 },
   isActive: { type: String, default: true },
-  products: [],
+  products: [
+    {
+      _id: {
+        type: String,
+        required: true,
+      },
+      name: String,
+      amount: Number,
+      unitPrice: Number,
+    },
+  ],
 });
 
 const Command = mongoose.model('Command', commandSchema);

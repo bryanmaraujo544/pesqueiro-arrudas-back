@@ -19,31 +19,27 @@ class CommandRepository {
   }
 
   async update({ _id, table, waiter, fishingType, total, isActive, products }) {
-    console.log({
-      table,
-      waiter,
-      fishingType,
-      total,
-      isActive,
-      products,
-    });
+    try {
+      await CommandModel.updateOne(
+        { _id },
+        {
+          $set: {
+            table,
+            waiter,
+            fishingType,
+            total,
+            isActive,
+            products,
+          },
+        }
+      );
 
-    await CommandModel.updateOne(
-      { _id },
-      {
-        $set: {
-          table,
-          waiter,
-          fishingType,
-          total,
-          isActive,
-          products,
-        },
-      }
-    );
-
-    const updatedCommand = await CommandModel.findOne({ _id });
-    return updatedCommand;
+      const updatedCommand = await CommandModel.findOne({ _id });
+      return updatedCommand;
+    } catch (error) {
+      console.log(error.message);
+      return null;
+    }
   }
 
   async delete(commandId) {
@@ -61,10 +57,8 @@ class CommandRepository {
   }
 
   async findById(id) {
-    console.log(id);
     try {
       const command = await CommandModel.findOne({ _id: id });
-      console.log(command);
       return command;
     } catch (error) {
       console.log(error.message);
