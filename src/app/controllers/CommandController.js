@@ -37,7 +37,7 @@ class CommandController {
 
   async update(req, res) {
     const { id } = req.params;
-    const { table, waiter, fishingType, total, isActive, products } = req.body;
+    const { table, waiter, fishingType, isActive, products } = req.body;
 
     if (!id) {
       return res
@@ -61,12 +61,17 @@ class CommandController {
 
     // TODO: verify the amount of products added in stock
 
+    const commandTotal = products.reduce(
+      (amount, current) => amount + current.amount * current.unitPrice,
+      0
+    );
+
     const updatedCommand = await CommandsRepository.update({
       _id: id,
       table,
       waiter,
       fishingType,
-      total,
+      total: commandTotal,
       isActive,
       products,
     });
