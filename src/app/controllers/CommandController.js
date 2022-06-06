@@ -61,10 +61,12 @@ class CommandController {
 
     // TODO: verify the amount of products added in stock
 
-    const commandTotal = products?.reduce(
-      (amount, current) => amount + current.amount * current.unitPrice,
-      0
-    );
+    const commandTotal = products
+      ?.reduce(
+        (amount, current) => amount + current.amount * current.unitPrice,
+        0
+      )
+      .toFixed(2);
 
     const updatedCommand = await CommandsRepository.update({
       _id: id,
