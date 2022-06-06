@@ -28,6 +28,7 @@ const commandSchema = new Schema({
       name: String,
       amount: Number,
       unitPrice: Number,
+      category: String,
     },
   ],
 });
