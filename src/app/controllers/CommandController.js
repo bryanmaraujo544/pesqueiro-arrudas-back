@@ -1,4 +1,5 @@
 const CommandsRepository = require('../repositories/CommandsRepository');
+const ProductsRepository = require('../repositories/ProductsRepository');
 const { someIsEmpty } = require('../utils/someIsEmpty');
 
 class CommandController {
@@ -27,10 +28,27 @@ class CommandController {
       });
     }
 
+    const products = [];
+
+    if (fishingType.toLowerCase() === 'pesca esportiva') {
+      const [fishingProduct] = await ProductsRepository.findByName(
+        'Pesca Esportiva'
+      );
+      products.push({ ...fishingProduct, amount: 1 });
+    }
+
+    if (fishingType.toLowerCase() === 'pesque pague') {
+      const [fishingProduct] = await ProductsRepository.findByName(
+        'Pesque Pague'
+      );
+      products.push({ ...fishingProduct, amount: 1 });
+    }
+
     const newCommand = await CommandsRepository.create({
       table,
       waiter,
       fishingType,
+      products,
     });
     return res.json({ message: 'Comanda adicionada', command: newCommand });
   }

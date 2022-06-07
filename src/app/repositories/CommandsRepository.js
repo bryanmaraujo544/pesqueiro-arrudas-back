@@ -2,12 +2,13 @@
 const CommandModel = require('../models/command');
 
 class CommandRepository {
-  async create({ table, waiter, fishingType }) {
+  async create({ table, waiter, fishingType, products }) {
     try {
       const newCommand = new CommandModel({
         table,
         waiter,
         fishingType,
+        products,
       });
 
       const command = await newCommand.save();
