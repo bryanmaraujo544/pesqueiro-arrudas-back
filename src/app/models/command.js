@@ -18,7 +18,7 @@ const commandSchema = new Schema({
   },
   fishingType: String,
   total: { type: Number, default: 0 },
-  isActive: { type: String, default: true },
+  isActive: { type: Boolean, default: true },
   products: [
     {
       _id: {
