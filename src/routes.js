@@ -2,6 +2,7 @@ const { Router } = require('express');
 const ProductController = require('./app/controllers/ProductController');
 const AuthController = require('./app/controllers/AuthController');
 const CommandController = require('./app/controllers/CommandController');
+const PaymentController = require('./app/controllers/PaymentController');
 
 const router = Router();
 
@@ -25,5 +26,9 @@ router.post('/commands', CommandController.store);
 router.delete('/commands/:id', CommandController.delete);
 router.put('/commands/:id', CommandController.update);
 router.get('/commands/:id', CommandController.show);
+
+// Payments Routes
+router.get('/payments', PaymentController.index);
+router.post('/payments', PaymentController.pay);
 
 module.exports = router;

@@ -18,6 +18,7 @@ const commandSchema = new Schema({
   },
   fishingType: String,
   total: { type: Number, default: 0 },
+  totalPayed: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
   products: [
     {
@@ -29,6 +30,11 @@ const commandSchema = new Schema({
       amount: Number,
       unitPrice: Number,
       category: String,
+      totalPayed: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
     },
   ],
 });

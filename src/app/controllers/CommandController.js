@@ -31,24 +31,32 @@ class CommandController {
     const products = [];
 
     if (fishingType.toLowerCase() === 'pesca esportiva') {
-      const [fishingProduct] = await ProductsRepository.findByName(
-        'Pesca Esportiva'
-      );
-      products.push({ ...fishingProduct, amount: 1 });
+      const [{ _id, name, imageURL, category, unitPrice }] =
+        await ProductsRepository.findByName('Pesca Esportiva');
+      products.push({ _id, name, imageURL, category, unitPrice, amount: 1 });
     }
 
     if (fishingType.toLowerCase() === 'pesque pague') {
-      const [fishingProduct] = await ProductsRepository.findByName(
-        'Pesque Pague'
-      );
-      products.push({ ...fishingProduct, amount: 1 });
+      const [{ _id, name, imageURL, category, unitPrice }] =
+        await ProductsRepository.findByName('Pesque Pague');
+      products.push({ _id, name, imageURL, category, unitPrice, amount: 1 });
     }
+
+    console.log({ products });
+    const commandTotal = products
+      ?.reduce(
+        (amount, current) => amount + current.amount * current.unitPrice,
+        0
+      )
+      .toFixed(2);
+    console.log({ commandTotal });
 
     const newCommand = await CommandsRepository.create({
       table,
       waiter,
       fishingType,
       products,
+      total: Number(commandTotal) || 0,
     });
     return res.json({ message: 'Comanda adicionada', command: newCommand });
   }
@@ -63,8 +71,8 @@ class CommandController {
         .json({ message: 'ID é necessário. ', command: null });
     }
 
-    const commandExists = await CommandsRepository.findById(id);
-    if (!commandExists) {
+    const commandToUpdate = await CommandsRepository.findById(id);
+    if (!commandToUpdate) {
       return res
         .status(400)
         .json({ message: 'Esta comanda não existe', command: null });
@@ -78,13 +86,25 @@ class CommandController {
     }
 
     // TODO: verify the amount of products added in stock
-
-    const commandTotal = products
-      ?.reduce(
+    const commandTotal = Number(
+      products?.reduce(
         (amount, current) => amount + current.amount * current.unitPrice,
         0
       )
-      .toFixed(2);
+    ).toFixed(2);
+
+    const commandPayedTotal = Number(
+      products?.reduce(
+        (amount, current) => amount + Number(current.totalPayed),
+        0
+      )
+    ).toFixed(2);
+
+    if (commandPayedTotal > commandToUpdate.total) {
+      return res
+        .status(400)
+        .json({ message: 'Valor pago maior que o necessário', command: null });
+    }
 
     const updatedCommand = await CommandsRepository.update({
       _id: id,
@@ -94,6 +114,7 @@ class CommandController {
       total: commandTotal,
       isActive,
       products,
+      totalPayed: commandPayedTotal,
     });
 
     if (updatedCommand === null) {

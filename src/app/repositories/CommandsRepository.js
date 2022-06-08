@@ -2,16 +2,18 @@
 const CommandModel = require('../models/command');
 
 class CommandRepository {
-  async create({ table, waiter, fishingType, products }) {
+  async create({ table, waiter, fishingType, products, total }) {
     try {
       const newCommand = new CommandModel({
         table,
         waiter,
         fishingType,
         products,
+        total,
       });
 
       const command = await newCommand.save();
+
       return command;
     } catch (error) {
       console.log(error?.message);
@@ -19,8 +21,18 @@ class CommandRepository {
     }
   }
 
-  async update({ _id, table, waiter, fishingType, total, isActive, products }) {
+  async update({
+    _id,
+    table,
+    waiter,
+    fishingType,
+    total,
+    isActive,
+    products,
+    totalPayed,
+  }) {
     try {
+      console.log({ totalPayed });
       await CommandModel.updateOne(
         { _id },
         {
@@ -31,6 +43,7 @@ class CommandRepository {
             total,
             isActive,
             products,
+            totalPayed: Number(totalPayed),
           },
         }
       );
