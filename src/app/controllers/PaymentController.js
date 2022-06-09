@@ -30,11 +30,12 @@ class PaymentController {
     // Update the command.totalPayed to the total value to be payed
     await CommandsRepository.update({
       _id: commandId,
+      isActive: false,
       totalPayed: commandToPay.total,
     });
 
     // Create the payment
-    const paymentCreated = await PaymentsRepository.create({
+    const [paymentCreated] = await PaymentsRepository.create({
       commandId,
       paymentType,
       totalPayed: commandToPay.total,
