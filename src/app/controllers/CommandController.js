@@ -42,14 +42,12 @@ class CommandController {
       products.push({ _id, name, imageURL, category, unitPrice, amount: 1 });
     }
 
-    console.log({ products });
     const commandTotal = products
       ?.reduce(
         (amount, current) => amount + current.amount * current.unitPrice,
         0
       )
       .toFixed(2);
-    console.log({ commandTotal });
 
     const newCommand = await CommandsRepository.create({
       table,
@@ -86,21 +84,24 @@ class CommandController {
     }
 
     // TODO: verify the amount of products added in stock
-    const commandTotal = Number(
-      products?.reduce(
-        (amount, current) => amount + current.amount * current.unitPrice,
-        0
-      )
-    ).toFixed(2);
+    const commandTotal = products?.reduce(
+      (amount, current) => amount + current.amount * current.unitPrice,
+      0
+    );
 
-    const commandPayedTotal = Number(
-      products?.reduce(
-        (amount, current) => amount + Number(current.totalPayed),
-        0
-      )
-    ).toFixed(2);
+    // If any products were sended this variable will be undefined
+    // so the total of the command will not be changed
+    const commandTotalFormatted =
+      commandTotal && Number(commandTotal).toFixed(2);
 
-    if (commandPayedTotal > commandToUpdate.total) {
+    const commandPayedTotal = products?.reduce(
+      (amount, current) => amount + Number(current.totalPayed),
+      0
+    );
+    const commandPayedTotalFormatted =
+      commandPayedTotal && Number(commandPayedTotal).toFixed(2);
+
+    if (commandPayedTotalFormatted > commandToUpdate.total) {
       return res
         .status(400)
         .json({ message: 'Valor pago maior que o necessário', command: null });
@@ -111,10 +112,10 @@ class CommandController {
       table,
       waiter,
       fishingType,
-      total: commandTotal,
+      total: commandTotalFormatted,
       isActive,
       products,
-      totalPayed: commandPayedTotal,
+      totalPayed: commandPayedTotalFormatted,
     });
 
     if (updatedCommand === null) {

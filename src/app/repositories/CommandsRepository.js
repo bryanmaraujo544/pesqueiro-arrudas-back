@@ -32,7 +32,6 @@ class CommandRepository {
     totalPayed,
   }) {
     try {
-      console.log({ totalPayed });
       await CommandModel.updateOne(
         { _id },
         {
@@ -43,7 +42,7 @@ class CommandRepository {
             total,
             isActive,
             products,
-            totalPayed: Number(totalPayed),
+            totalPayed: totalPayed && Number(totalPayed),
           },
         }
       );
@@ -52,6 +51,7 @@ class CommandRepository {
       return updatedCommand;
     } catch (error) {
       console.log(error.message);
+      // process.exit(1);
       return null;
     }
   }
