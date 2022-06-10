@@ -65,6 +65,23 @@ class CommandRepository {
     return commands;
   }
 
+  async findCurrentDayCommands() {
+    const todayDayInMonth = new Date().getDate();
+    const todayMonth = new Date().getMonth();
+    const todayYear = new Date().getFullYear();
+
+    const allCommands = await CommandModel.find({});
+    const todayCommands = await allCommands.filter((command) => {
+      const createdAtDate = new Date(command.createdAt);
+      return (
+        createdAtDate.getDate() === todayDayInMonth &&
+        createdAtDate.getMonth() === todayMonth &&
+        createdAtDate.getFullYear() === todayYear
+      );
+    });
+    return todayCommands;
+  }
+
   async findByTable({ table }) {
     const command = await CommandModel.findOne({ table, isActive: true });
     return command;

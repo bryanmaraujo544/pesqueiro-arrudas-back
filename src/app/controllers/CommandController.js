@@ -4,8 +4,8 @@ const { someIsEmpty } = require('../utils/someIsEmpty');
 
 class CommandController {
   async index(req, res) {
-    const products = await CommandsRepository.findAll();
-    res.send(products);
+    const commands = await CommandsRepository.findCurrentDayCommands();
+    res.send(commands);
   }
 
   async store(req, res) {
