@@ -90,6 +90,27 @@ class ProductController {
 
     return res.json({ message: 'Produto atualizado', product: updatedProduct });
   }
+
+  async verifyTheAmount(req, res) {
+    const { productId, amount } = req.body;
+
+    if (!productId || !amount) {
+      return res.status(400).json({
+        message: 'O ID do produto e a quantidade precisam ser informados.',
+        isInStock: false,
+      });
+    }
+
+    const productToVerify = await ProductsRepository.findById(productId);
+    if (amount > productToVerify.amount) {
+      return res.status(400).json({
+        message: 'Quantidade maior do que o estoque do produto',
+        isInStock: false,
+      });
+    }
+
+    return res.json({ message: 'Produto em estoque', isInStock: true });
+  }
 }
 
 module.exports = new ProductController();

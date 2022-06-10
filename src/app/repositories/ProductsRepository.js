@@ -47,6 +47,11 @@ class ProductsRepository {
     const updatedProduct = await oldProduct.save();
     return updatedProduct;
   }
+
+  async findById(_id) {
+    const product = await ProductModel.findOne({ _id });
+    return product;
+  }
 }
 
 module.exports = new ProductsRepository();
