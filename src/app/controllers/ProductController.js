@@ -1,6 +1,7 @@
 // const { O} = require('mongoose');
 
 const ProductsRepository = require('../repositories/ProductsRepository');
+const { isOneSpecialProduct } = require('../utils/isOneSpecialProduct');
 const { someIsEmpty } = require('../utils/someIsEmpty');
 
 class ProductController {
@@ -110,6 +111,64 @@ class ProductController {
     }
 
     return res.json({ message: 'Produto em estoque', isInStock: true });
+  }
+
+  async updateAmount(req, res) {
+    const { operation } = req.query;
+    const { productId, amount } = req.body;
+    if (!productId || (!amount && amount !== 0)) {
+      return res.status(400).json({
+        message: 'Campos obrigatórios não foram informados.',
+        isAllowed: false,
+      });
+    }
+
+    if (Number.isNaN(Number(amount))) {
+      return res.status(400).json({
+        message: 'Valor de quantidade está inválido',
+        isAllowed: false,
+      });
+    }
+
+    // I am receiving the updatedAmount, so I need to grab the difference between the old value.
+    const productToUpdate = await ProductsRepository.findById(productId);
+    if (!productToUpdate) {
+      return res
+        .status(400)
+        .json({ message: 'Não há comanda com esse Id', isAllowed: false });
+    }
+
+    const oldAmount = await productToUpdate.amount;
+    const isProductWithoutAmount = isOneSpecialProduct(productToUpdate.name);
+
+    if (operation === 'diminish' && !isProductWithoutAmount) {
+      // 31 -> 4 = 27;
+      const newAmount = oldAmount - amount;
+
+      if (newAmount < 0) {
+        return res.status(400).json({
+          message: 'Quantidade maior que estoque permitido.',
+          isAllowed: false,
+        });
+      }
+      await ProductsRepository.updateAmount({ productId, amount: newAmount });
+      return res.json({
+        message: 'Quantidade do produto atualizada',
+        isAllowed: true,
+      });
+    }
+
+    if (operation === 'increase' && !isProductWithoutAmount) {
+      // 27 -> 4 = 31
+      const newAmount = oldAmount + amount;
+      await ProductsRepository.updateAmount({ productId, amount: newAmount });
+      return res.json({
+        message: 'Quantidade do produto atualizada',
+        isAllowed: true,
+      });
+    }
+
+    return res.json({ message: 'Quantidade do produto atualizada' });
   }
 }
 

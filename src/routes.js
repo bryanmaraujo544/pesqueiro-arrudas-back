@@ -20,6 +20,7 @@ router.post('/products', ProductController.store);
 router.delete('/products/:id', ProductController.delete);
 router.put('/products/:id', ProductController.update);
 router.post('/products/verify-amount', ProductController.verifyTheAmount);
+router.put('/products-update-amount', ProductController.updateAmount);
 
 // Commands Routes
 router.get('/commands', CommandController.index);

@@ -95,6 +95,8 @@ class CommandController {
     const commandTotalFormatted =
       commandTotal && Number(commandTotal).toFixed(2);
 
+    // If any products were sended this variable will be undefined
+    // so the payed total of the command will not be changed
     const commandPayedTotal = products?.reduce(
       (amount, current) => amount + Number(current.totalPayed),
       0
@@ -107,6 +109,9 @@ class CommandController {
         .status(400)
         .json({ message: 'Valor pago maior que o necessário', command: null });
     }
+
+    // DIMINISH THE AMOUNT OF PRODUCTS ADDED IN STOCK
+    // TODO: I need to grab the new products added and the difference between the amount of old to new.
 
     const updatedCommand = await CommandsRepository.update({
       _id: id,

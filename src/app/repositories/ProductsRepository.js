@@ -52,6 +52,22 @@ class ProductsRepository {
     const product = await ProductModel.findOne({ _id });
     return product;
   }
+
+  async updateAmount({ productId, amount }) {
+    try {
+      const product = await ProductModel.updateOne(
+        { _id: productId },
+        {
+          $set: {
+            amount: Number(amount),
+          },
+        }
+      );
+      return product;
+    } catch (error) {
+      console.log('updateProductAmount Error', error.messaeg);
+    }
+  }
 }
 
 module.exports = new ProductsRepository();
