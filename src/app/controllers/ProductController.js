@@ -103,7 +103,9 @@ class ProductController {
     }
 
     const productToVerify = await ProductsRepository.findById(productId);
-    if (amount > productToVerify.amount) {
+    const isProductWithoutAmount = isOneSpecialProduct(productToVerify.name);
+
+    if (amount > productToVerify.amount && !isProductWithoutAmount) {
       return res.status(400).json({
         message: 'Quantidade maior do que o estoque do produto',
         isInStock: false,
@@ -119,6 +121,7 @@ class ProductController {
     if (!productId || (!amount && amount !== 0)) {
       return res.status(400).json({
         message: 'Campos obrigatórios não foram informados.',
+        product: null,
         isAllowed: false,
       });
     }
@@ -126,6 +129,7 @@ class ProductController {
     if (Number.isNaN(Number(amount))) {
       return res.status(400).json({
         message: 'Valor de quantidade está inválido',
+        product: null,
         isAllowed: false,
       });
     }
@@ -133,9 +137,11 @@ class ProductController {
     // I am receiving the updatedAmount, so I need to grab the difference between the old value.
     const productToUpdate = await ProductsRepository.findById(productId);
     if (!productToUpdate) {
-      return res
-        .status(400)
-        .json({ message: 'Não há comanda com esse Id', isAllowed: false });
+      return res.status(400).json({
+        message: 'Não há comanda com esse Id',
+        product: null,
+        isAllowed: false,
+      });
     }
 
     const oldAmount = await productToUpdate.amount;
@@ -145,15 +151,23 @@ class ProductController {
       // 31 -> 4 = 27;
       const newAmount = oldAmount - amount;
 
+      // SOCKET.IO -> say to every device the stock of the product is low.
       if (newAmount < 0) {
         return res.status(400).json({
           message: 'Quantidade maior que estoque permitido.',
+          product: null,
           isAllowed: false,
         });
       }
-      await ProductsRepository.updateAmount({ productId, amount: newAmount });
+      const updatedProduct = await ProductsRepository.updateAmount({
+        productId,
+        amount: newAmount,
+      });
+      // SOCKET IO -> say to every device the amount decreased
+
       return res.json({
         message: 'Quantidade do produto atualizada',
+        product: updatedProduct,
         isAllowed: true,
       });
     }
@@ -161,14 +175,24 @@ class ProductController {
     if (operation === 'increase' && !isProductWithoutAmount) {
       // 27 -> 4 = 31
       const newAmount = oldAmount + amount;
-      await ProductsRepository.updateAmount({ productId, amount: newAmount });
+      const updatedProduct = await ProductsRepository.updateAmount({
+        productId,
+        amount: newAmount,
+      });
+
+      // SOCKET IO -> say to every device the amount increase
       return res.json({
         message: 'Quantidade do produto atualizada',
+        product: updatedProduct,
         isAllowed: true,
       });
     }
 
-    return res.json({ message: 'Quantidade do produto atualizada' });
+    return res.json({
+      message: 'Quantidade do produto atualizada',
+      product: null,
+      isAllowed: true,
+    });
   }
 }
 

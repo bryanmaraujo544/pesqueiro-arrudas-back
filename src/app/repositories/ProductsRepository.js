@@ -55,7 +55,7 @@ class ProductsRepository {
 
   async updateAmount({ productId, amount }) {
     try {
-      const product = await ProductModel.updateOne(
+      await ProductModel.updateOne(
         { _id: productId },
         {
           $set: {
@@ -63,7 +63,10 @@ class ProductsRepository {
           },
         }
       );
-      return product;
+      const updatedProduct = await ProductModel.findById({
+        _id: productId.toString(),
+      });
+      return updatedProduct;
     } catch (error) {
       console.log('updateProductAmount Error', error.messaeg);
     }
