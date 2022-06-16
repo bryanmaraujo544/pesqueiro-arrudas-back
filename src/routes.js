@@ -3,6 +3,7 @@ const ProductController = require('./app/controllers/ProductController');
 const AuthController = require('./app/controllers/AuthController');
 const CommandController = require('./app/controllers/CommandController');
 const PaymentController = require('./app/controllers/PaymentController');
+const KitchenOrderController = require('./app/controllers/KitchenOrderController');
 
 const router = Router();
 
@@ -32,5 +33,9 @@ router.get('/commands/:id', CommandController.show);
 // Payments Routes
 router.get('/payments', PaymentController.index);
 router.post('/payments', PaymentController.pay);
+
+// Kitchen Routes
+router.get('/kitchen/orders', KitchenOrderController.index);
+router.post('/kitchen/orders', KitchenOrderController.store);
 
 module.exports = router;
