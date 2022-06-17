@@ -80,6 +80,11 @@ class KitchenOrderController {
         if (productPrepared) {
           const amountToPrepare = product.amount - productPrepared.amount;
 
+          // If one product of command comes with amount less than old order returns null.
+          // It's impossible to unprepare something.
+          if (amountToPrepare < 0) {
+            return null;
+          }
           return amountToPrepare === 0
             ? null
             : { ...product, amount: amountToPrepare };
@@ -88,6 +93,13 @@ class KitchenOrderController {
         return product;
       })
       .filter(Boolean);
+
+    if (productsToPrepare.length === 0) {
+      return res.status(400).json({
+        message: 'Nada a preparar.',
+        kitchenOrder: null,
+      });
+    }
 
     const kitchenOrderCreated = await KitchenOrdersRepository.create({
       commandId,
@@ -98,8 +110,8 @@ class KitchenOrderController {
     });
 
     res.json({
-      kitchenOrder: kitchenOrderCreated,
       message: 'Pedido registrado na cozinha',
+      kitchenOrder: kitchenOrderCreated,
     });
   }
 
