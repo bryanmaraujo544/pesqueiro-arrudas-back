@@ -37,7 +37,7 @@ class KitchenOrderController {
       });
     }
 
-    // Grab the products of this command that already was being sended to kitchen
+    // Grab the orders of this command that already was being sended to kitchen
     const commandKitchenOrder = await KitchenOrdersRepository.findByCommandId({
       commandId,
     });
@@ -58,24 +58,26 @@ class KitchenOrderController {
       });
     }
 
-    const productsToPrepare = products.map((product) => {
-      const productPrepared = commandProductsSendedToKitchen?.find(
-        ({ _id }) => _id === product._id
-      );
+    const productsToPrepare = products
+      .map((product) => {
+        const productPrepared = commandProductsSendedToKitchen?.find(
+          ({ _id }) => _id === product._id
+        );
 
-      // If one same product is sended again to prepare I grabb the difference of amount of old ordering to new one
-      // In past 3 Coca was ordered. Then the customer orders more 2. Here the amount of coca will be 5 (total of coca of command);
-      // But from this 5 Coca's, 3 already was ordered to kitchen, so in this new order will has only 2 Coca's
-      if (productPrepared) {
-        const amountToPrepare = product.amount - productPrepared.amount;
+        // If one same product is sended again to prepare I grabb the difference of amount of old ordering to new one
+        // In past 3 Coca was ordered. Then the customer orders more 2. Here the amount of coca will be 5 (total of coca of command);
+        // But from this 5 Coca's, 3 already was ordered to kitchen, so in this new order will has only 2 Coca's
+        if (productPrepared) {
+          const amountToPrepare = product.amount - productPrepared.amount;
 
-        return amountToPrepare === 0
-          ? null
-          : { ...product, amount: amountToPrepare };
-      }
+          return amountToPrepare === 0
+            ? null
+            : { ...product, amount: amountToPrepare };
+        }
 
-      return product;
-    });
+        return product;
+      })
+      .filter(Boolean);
 
     const kitchenOrderCreated = await KitchenOrdersRepository.create({
       commandId,
@@ -88,6 +90,28 @@ class KitchenOrderController {
     res.json({
       kitchenOrder: kitchenOrderCreated,
       message: 'Pedido registrado na cozinha',
+    });
+  }
+
+  async update(req, res) {
+    const { id } = req.params;
+    const { isMade, products } = req.body;
+
+    if (!id) {
+      return res.status(400).json({
+        message: 'Id do pedido precisa ser informado',
+        kitchenOrder: null,
+      });
+    }
+
+    const updatedKitchenOrder = await KitchenOrdersRepository.update({
+      orderId: id,
+      isMade,
+      products,
+    });
+    res.json({
+      message: 'Pedido da cozinha atualizado',
+      kitchenOrder: updatedKitchenOrder,
     });
   }
 }

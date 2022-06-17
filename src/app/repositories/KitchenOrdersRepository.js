@@ -19,6 +19,21 @@ class KitchenOrdersRepository {
     return kitchenOrder;
   }
 
+  async update({ orderId, isMade, products }) {
+    await KitchenOrder.updateOne(
+      { _id: orderId },
+      {
+        $set: {
+          isMade,
+          products,
+        },
+      }
+    );
+
+    const updatedKitchenOrder = await KitchenOrder.find({ _id: orderId });
+    return updatedKitchenOrder;
+  }
+
   async findByCommandId({ commandId }) {
     const kitchenOrder = await KitchenOrder.findOne({ commandId });
     return kitchenOrder;
