@@ -1,5 +1,6 @@
 const CommandsRepository = require('../repositories/CommandsRepository');
 const KitchenOrdersRepository = require('../repositories/KitchenOrdersRepository');
+const gatherKitchenOrder = require('../utils/gatherKitchenOrder');
 const { someIsEmpty } = require('../utils/someIsEmpty');
 
 class KitchenOrderController {
@@ -38,10 +39,19 @@ class KitchenOrderController {
     }
 
     // Grab the orders of this command that already was being sended to kitchen
-    const commandKitchenOrder = await KitchenOrdersRepository.findByCommandId({
+    const commandKitchenOrders = await KitchenOrdersRepository.findByCommandId({
       commandId,
     });
-    const commandProductsSendedToKitchen = commandKitchenOrder?.products;
+    // console.log('All past orders of command', commandKitchenOrders);
+
+    // This all orders with products gathered
+    const completeCommandKitchenOrders =
+      commandKitchenOrders.length > 0
+        ? gatherKitchenOrder(commandKitchenOrders)
+        : null;
+
+    const commandProductsSendedToKitchen =
+      completeCommandKitchenOrders?.products;
 
     // Verify if nothing changed;
     const preparedProductsStr = commandProductsSendedToKitchen

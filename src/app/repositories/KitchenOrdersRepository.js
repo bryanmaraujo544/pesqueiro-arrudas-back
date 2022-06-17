@@ -35,8 +35,8 @@ class KitchenOrdersRepository {
   }
 
   async findByCommandId({ commandId }) {
-    const kitchenOrder = await KitchenOrder.findOne({ commandId });
-    return kitchenOrder;
+    const kitchenOrders = await KitchenOrder.find({ commandId });
+    return kitchenOrders;
   }
 }
 
