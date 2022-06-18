@@ -3,14 +3,12 @@ function gatherKitchenOrder(commandsKitchenOrder) {
   return commandsKitchenOrder.reduce((acc, cur) => {
     const accProducts = acc.products;
     const curProducts = cur.products;
-    // console.log({ accProducts, curProducts });
 
     let gatheredProducts;
 
     if (accProducts.length >= curProducts.length) {
       const sameProductsUpdated = accProducts.map((accProduct) => {
         const product = curProducts.find(({ _id }) => _id === accProduct._id);
-        // console.log({ product });
         if (product) {
           const amountPrepared = accProduct.amount + product.amount;
           return {
@@ -32,9 +30,6 @@ function gatherKitchenOrder(commandsKitchenOrder) {
       const diffProducts = curProducts.filter((curProduct) =>
         accProducts.every((accProduct) => accProduct._id !== curProduct._id)
       );
-      // console.log('DiffProducts -> ', diffProducts);
-
-      // console.log({ sameProductsUpdated });
 
       gatheredProducts = [...sameProductsUpdated, ...diffProducts];
       return {
@@ -51,7 +46,6 @@ function gatherKitchenOrder(commandsKitchenOrder) {
     if (curProducts.length > accProducts.length) {
       const sameProductsUpdated = curProducts.map((curProduct) => {
         const product = accProducts.find(({ _id }) => _id === curProduct._id);
-        // console.log({ product });
         if (product) {
           const amountPrepared = curProduct.amount + product.amount;
           // return { ...curProduct, amount: amountPrepared };

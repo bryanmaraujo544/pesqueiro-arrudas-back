@@ -6,13 +6,14 @@ class KitchenOrdersRepository {
     return kitchenOrders;
   }
 
-  async create({ commandId, table, waiter, products, observation }) {
+  async create({ commandId, table, waiter, products, observation, isMade }) {
     const newKitchenOrder = new KitchenOrder({
       commandId,
       table,
       waiter,
       products,
       observation,
+      isMade,
     });
 
     const kitchenOrder = newKitchenOrder.save();
@@ -37,6 +38,11 @@ class KitchenOrdersRepository {
   async findByCommandId({ commandId }) {
     const kitchenOrders = await KitchenOrder.find({ commandId });
     return kitchenOrders;
+  }
+
+  async findById(_id) {
+    const kitchenOrder = await KitchenOrder.findOne({ _id });
+    return kitchenOrder;
   }
 }
 

@@ -36,7 +36,12 @@ router.post('/payments', PaymentController.pay);
 
 // Kitchen Routes
 router.get('/kitchen/orders', KitchenOrderController.index);
+router.get('/kitchen/orders/:id', KitchenOrderController.show);
 router.post('/kitchen/orders', KitchenOrderController.store);
 router.put('/kitchen/orders/:id', KitchenOrderController.update);
+router.get(
+  '/kitchen/get-command-orders/:commandId',
+  KitchenOrderController.getCommandOrders
+);
 
 module.exports = router;

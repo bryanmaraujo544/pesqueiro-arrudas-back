@@ -13,7 +13,8 @@ class KitchenOrderController {
   }
 
   async store(req, res) {
-    const { commandId, table, waiter, products, observation } = req.body;
+    const { commandId, table, waiter, products, observation, isMade } =
+      req.body;
 
     const someFieldIsEmpty = someIsEmpty([table, waiter, commandId]);
     if (someFieldIsEmpty) {
@@ -42,7 +43,6 @@ class KitchenOrderController {
     const commandKitchenOrders = await KitchenOrdersRepository.findByCommandId({
       commandId,
     });
-    // console.log('All past orders of command', commandKitchenOrders);
 
     // This all orders with products gathered
     const completeCommandKitchenOrders =
@@ -107,6 +107,7 @@ class KitchenOrderController {
       waiter,
       products: productsToPrepare,
       observation,
+      isMade,
     });
 
     res.json({
@@ -135,6 +136,50 @@ class KitchenOrderController {
       message: 'Pedido da cozinha atualizado',
       kitchenOrder: updatedKitchenOrder,
     });
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const kitchenOrder = await KitchenOrdersRepository.findById(id);
+
+    if (!kitchenOrder) {
+      return res.status(400).json({
+        message: 'Pedido da cozinha não encontrado',
+        kitchenOrder: null,
+      });
+    }
+
+    return res.json({
+      kitchenOrder,
+      message: 'Pedido da cozinha encontrado',
+    });
+  }
+
+  async getCommandOrders(req, res) {
+    const { commandId } = req.params;
+
+    if (!commandId) {
+      return res.status(400).json({
+        message: 'Id da comanda precisa ser informado',
+      });
+    }
+
+    // Grab the orders of this command that already was being sended to kitchen
+    const commandKitchenOrders = await KitchenOrdersRepository.findByCommandId({
+      commandId,
+    });
+
+    // This all orders with products gathered
+    const completeCommandKitchenOrders =
+      commandKitchenOrders.length > 0
+        ? gatherKitchenOrder(commandKitchenOrders)
+        : null;
+
+    const commandProductsSendedToKitchen =
+      completeCommandKitchenOrders?.products;
+
+    res.send(commandProductsSendedToKitchen);
   }
 }
 
