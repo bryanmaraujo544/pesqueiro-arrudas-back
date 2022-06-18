@@ -156,6 +156,19 @@ class KitchenOrderController {
     });
   }
 
+  async delete(req, res) {
+    const { commandId } = req.params;
+
+    if (!commandId) {
+      return res.status(400).json({
+        message: 'Id da comanda precisa ser informado',
+      });
+    }
+
+    await KitchenOrdersRepository.delete({ commandId });
+    res.json({ message: 'Pedidos da cozinha desta comanda foram deletados' });
+  }
+
   async getCommandOrders(req, res) {
     const { commandId } = req.params;
 

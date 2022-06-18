@@ -39,6 +39,7 @@ router.get('/kitchen/orders', KitchenOrderController.index);
 router.get('/kitchen/orders/:id', KitchenOrderController.show);
 router.post('/kitchen/orders', KitchenOrderController.store);
 router.put('/kitchen/orders/:id', KitchenOrderController.update);
+router.delete('/kitchen/orders/:commandId', KitchenOrderController.delete);
 router.get(
   '/kitchen/get-command-orders/:commandId',
   KitchenOrderController.getCommandOrders

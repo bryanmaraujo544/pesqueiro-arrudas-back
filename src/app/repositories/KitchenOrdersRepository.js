@@ -35,6 +35,10 @@ class KitchenOrdersRepository {
     return updatedKitchenOrder;
   }
 
+  async delete({ commandId }) {
+    await KitchenOrder.deleteMany({ commandId });
+  }
+
   async findByCommandId({ commandId }) {
     const kitchenOrders = await KitchenOrder.find({ commandId });
     return kitchenOrders;

@@ -49,6 +49,7 @@ function gatherKitchenOrder(commandsKitchenOrder) {
         if (product) {
           const amountPrepared = curProduct.amount + product.amount;
           // return { ...curProduct, amount: amountPrepared };
+
           return {
             _id: curProduct._id,
             name: curProduct.name,
