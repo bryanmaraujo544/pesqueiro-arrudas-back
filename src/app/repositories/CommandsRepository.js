@@ -65,7 +65,7 @@ class CommandRepository {
     return commands;
   }
 
-  async findCurrentDayCommands() {
+  async findCurrentDayCommands({ isActive }) {
     const todayDayInMonth = new Date().getDate();
     const todayMonth = new Date().getMonth();
     const todayYear = new Date().getFullYear();
@@ -79,6 +79,16 @@ class CommandRepository {
         createdAtDate.getFullYear() === todayYear
       );
     });
+
+    if (isActive) {
+      const status = isActive === 'true' ? true : 'false';
+
+      if (status === true) {
+        return todayCommands.filter((com) => com.isActive === true);
+      }
+      return todayCommands.filter((com) => com.isActive === false);
+    }
+
     return todayCommands;
   }
 

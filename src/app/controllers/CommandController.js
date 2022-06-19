@@ -4,7 +4,10 @@ const { someIsEmpty } = require('../utils/someIsEmpty');
 
 class CommandController {
   async index(req, res) {
-    const commands = await CommandsRepository.findCurrentDayCommands();
+    const { isActive } = req.query;
+    const commands = await CommandsRepository.findCurrentDayCommands({
+      isActive,
+    });
     res.send(commands);
   }
 
@@ -109,9 +112,6 @@ class CommandController {
         .status(400)
         .json({ message: 'Valor pago maior que o necessário', command: null });
     }
-
-    // DIMINISH THE AMOUNT OF PRODUCTS ADDED IN STOCK
-    // TODO: I need to grab the new products added and the difference between the amount of old to new.
 
     const updatedCommand = await CommandsRepository.update({
       _id: id,

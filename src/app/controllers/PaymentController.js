@@ -42,6 +42,8 @@ class PaymentController {
       totalPayed: commandToPay.total,
     });
 
+    // Delete all of kitchenOrders of commands
+
     res.json({ message: 'Comanda paga!', paymentInfos: paymentCreated });
   }
 }

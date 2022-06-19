@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 const { DateTime } = require('luxon');
 const CashiersRepository = require('../repositories/CashiersRepository');
+const PaymentsRepository = require('../repositories/PaymentsRepository');
 
 class CashierController {
   async index(req, res) {
@@ -59,6 +60,10 @@ class CashierController {
       date,
       payments,
     });
+
+    // Delete all of payments of 10 days ago
+    const past10Day = cashierDate.minus({ days: 10 });
+    await PaymentsRepository.dropPayments({ date: past10Day });
 
     res.json({ cashier: cashierCreated, message: 'Caixa fechado! ' });
   }
