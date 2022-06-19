@@ -46,6 +46,7 @@ router.get(
 
 // Cashier Routes
 router.get('/cashiers', CashierController.index);
+router.get('/cashiers/:id', CashierController.show);
 router.post('/cashiers', CashierController.closeCashier);
 
 module.exports = router;

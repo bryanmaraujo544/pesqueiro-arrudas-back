@@ -38,6 +38,11 @@ class CashiersRepository {
   async delete(_id) {
     await Cashier.deleteOne({ _id });
   }
+
+  async findById(_id) {
+    const cashier = await Cashier.findOne({ _id });
+    return cashier;
+  }
 }
 
 module.exports = new CashiersRepository();

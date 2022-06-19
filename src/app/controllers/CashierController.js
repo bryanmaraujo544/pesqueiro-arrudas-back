@@ -45,7 +45,9 @@ class CashierController {
       return false;
     });
 
-    await CashiersRepository.delete(hasSomeCashierInThisDate._id.valueOf());
+    if (hasSomeCashierInThisDate) {
+      await CashiersRepository.delete(hasSomeCashierInThisDate._id.valueOf());
+    }
 
     const cashierTotal = payments.reduce((acc, cur) => {
       const total = (acc.totalPayed * 100 + cur.totalPayed * 100) / 100;
@@ -59,6 +61,23 @@ class CashierController {
     });
 
     res.json({ cashier: cashierCreated, message: 'Caixa fechado! ' });
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const cashier = await CashiersRepository.findById(id);
+    if (!cashier) {
+      return res.status(400).json({
+        message: 'Não existe nenhum caixa fechado com este ID',
+        cashier: null,
+      });
+    }
+
+    res.json({
+      message: 'Caixa fechado encontrado com sucesso.',
+      cashier,
+    });
   }
 }
 
