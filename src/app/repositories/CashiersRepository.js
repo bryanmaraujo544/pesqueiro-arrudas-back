@@ -1,0 +1,43 @@
+const { DateTime } = require('luxon');
+const Cashier = require('../models/Cashier');
+
+class CashiersRepository {
+  async findAll(date) {
+    const cashiers = await Cashier.find({});
+
+    const dt = DateTime.fromISO(date);
+    if (date) {
+      return cashiers.filter((cashier) => {
+        const cdt = DateTime.fromJSDate(cashier.date);
+
+        if (
+          dt.day === cdt.day &&
+          dt.month === cdt.month &&
+          dt.year === cdt.year
+        ) {
+          return true;
+        }
+        return false;
+      });
+    }
+
+    return cashiers;
+  }
+
+  async create({ total, date, payments }) {
+    const cashier = new Cashier({
+      total,
+      date,
+      payments,
+    });
+
+    const cashierCreated = await cashier.save();
+    return cashierCreated;
+  }
+
+  async delete(_id) {
+    await Cashier.deleteOne({ _id });
+  }
+}
+
+module.exports = new CashiersRepository();

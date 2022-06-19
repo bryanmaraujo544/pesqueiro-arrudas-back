@@ -1,8 +1,26 @@
+const { DateTime } = require('luxon');
 const PaymentModel = require('../models/payment');
 
 class PaymentsRepository {
-  async findAll() {
-    const payments = await PaymentModel.find({});
+  async findAll({ date }) {
+    const payments = await PaymentModel.find({}).populate('command');
+
+    const dt = DateTime.fromISO(date);
+
+    if (date) {
+      return payments.filter((payment) => {
+        const pdt = DateTime.fromJSDate(payment.createdAt);
+
+        if (
+          dt.day === pdt.day &&
+          dt.month === pdt.month &&
+          dt.year === pdt.year
+        ) {
+          return true;
+        }
+        return false;
+      });
+    }
     return payments;
   }
 

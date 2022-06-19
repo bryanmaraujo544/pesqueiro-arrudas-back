@@ -4,7 +4,8 @@ const { someIsEmpty } = require('../utils/someIsEmpty');
 
 class PaymentController {
   async index(req, res) {
-    const payments = await PaymentsRepository.findAll({});
+    const { date } = req.query;
+    const payments = await PaymentsRepository.findAll({ date });
     res.send(payments);
   }
 

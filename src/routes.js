@@ -4,13 +4,12 @@ const AuthController = require('./app/controllers/AuthController');
 const CommandController = require('./app/controllers/CommandController');
 const PaymentController = require('./app/controllers/PaymentController');
 const KitchenOrderController = require('./app/controllers/KitchenOrderController');
+const CashierController = require('./app/controllers/CashierController');
 
 const router = Router();
 
 router.get('/', (req, res) => {
-  console.log(process.env.MONGO_URI);
-
-  res.send('oioioi');
+  res.send('Pesqueiro Arrudas API');
 });
 
 router.post('/auth/login', AuthController.index);
@@ -44,5 +43,9 @@ router.get(
   '/kitchen/get-command-orders/:commandId',
   KitchenOrderController.getCommandOrders
 );
+
+// Cashier Routes
+router.get('/cashiers', CashierController.index);
+router.post('/cashiers', CashierController.closeCashier);
 
 module.exports = router;
