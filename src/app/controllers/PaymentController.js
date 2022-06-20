@@ -1,6 +1,7 @@
 const PaymentsRepository = require('../repositories/PaymentsRepository');
 const CommandsRepository = require('../repositories/CommandsRepository');
 const { someIsEmpty } = require('../utils/someIsEmpty');
+const KitchenOrdersRepository = require('../repositories/KitchenOrdersRepository');
 
 class PaymentController {
   async index(req, res) {
@@ -43,6 +44,7 @@ class PaymentController {
     });
 
     // Delete all of kitchenOrders of commands
+    await KitchenOrdersRepository.delete({ commandId });
 
     res.json({ message: 'Comanda paga!', paymentInfos: paymentCreated });
   }

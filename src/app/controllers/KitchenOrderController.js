@@ -13,6 +13,7 @@ class KitchenOrderController {
   }
 
   async store(req, res) {
+    const socket = req.io;
     const { commandId, table, waiter, products, observation, isMade } =
       req.body;
 
@@ -109,6 +110,9 @@ class KitchenOrderController {
       observation,
       isMade,
     });
+
+    // SOCKET
+    socket.emit('kitchen-order-created', kitchenOrderCreated);
 
     res.json({
       message: 'Pedido registrado na cozinha',
