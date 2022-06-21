@@ -168,6 +168,7 @@ class KitchenOrderController {
   }
 
   async delete(req, res) {
+    const socket = req.io;
     const { commandId } = req.params;
 
     if (!commandId) {
@@ -177,6 +178,9 @@ class KitchenOrderController {
     }
 
     await KitchenOrdersRepository.delete({ commandId });
+
+    socket.emit('kitchen-order-deleted', { commandId });
+
     res.json({ message: 'Pedidos da cozinha desta comanda foram deletados' });
   }
 

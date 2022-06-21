@@ -141,6 +141,7 @@ class CommandController {
     }
 
     await CommandsRepository.delete(id);
+
     res.status(200).json({ message: 'Comanda deletada' });
   }
 
