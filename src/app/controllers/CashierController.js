@@ -12,6 +12,7 @@ class CashierController {
   }
 
   async closeCashier(req, res) {
+    const socket = req.io;
     const { payments, date } = req.body;
 
     if (!date || !payments) {
@@ -61,9 +62,12 @@ class CashierController {
       payments,
     });
 
-    // Delete all of payments of 10 days ago
+    // Delete all payment of 10 days ago
     const past10Day = cashierDate.minus({ days: 10 }).setLocale('pt-BR');
     await PaymentsRepository.dropPayments({ date: past10Day });
+
+    // SOCKET
+    socket.emit('cashier-created', cashierCreated);
 
     res.json({ cashier: cashierCreated, message: 'Caixa fechado! ' });
   }
