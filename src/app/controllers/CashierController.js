@@ -62,7 +62,7 @@ class CashierController {
     });
 
     // Delete all of payments of 10 days ago
-    const past10Day = cashierDate.minus({ days: 10 });
+    const past10Day = cashierDate.minus({ days: 10 }).setLocale('pt-BR');
     await PaymentsRepository.dropPayments({ date: past10Day });
 
     res.json({ cashier: cashierCreated, message: 'Caixa fechado! ' });

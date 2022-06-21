@@ -6,11 +6,11 @@ class PaymentsRepository {
   async findAll({ date }) {
     const payments = await PaymentModel.find({}).populate('command');
 
-    const dt = DateTime.fromISO(date);
+    const dt = DateTime.fromISO(date).setLocale('pt-BR');
 
     if (date) {
       return payments.filter((payment) => {
-        const pdt = DateTime.fromJSDate(payment.createdAt);
+        const pdt = DateTime.fromJSDate(payment.createdAt).setLocale('pt-BR');
 
         if (
           dt.day === pdt.day &&
@@ -48,7 +48,7 @@ class PaymentsRepository {
     try {
       const payments = await PaymentModel.find({});
       const paymentsOf10DayAgo = payments.filter(({ createdAt }) => {
-        const dt = DateTime.fromJSDate(createdAt);
+        const dt = DateTime.fromJSDate(createdAt).setLocale('pt-BR');
 
         if (
           dt.day === date.day &&
