@@ -47,7 +47,10 @@ class PaymentController {
       totalPayed: commandToPay.total,
     });
 
-    // Delete all of kitchenOrders of commands
+    // SOCKET -> emit to Home page that one payment was added
+    socket.emit('payment-created', paymentCreated);
+
+    // Delete all of kitchenOrders of command payed
     await KitchenOrdersRepository.delete({ commandId });
 
     res.json({ message: 'Comanda paga!', paymentInfos: paymentCreated });
