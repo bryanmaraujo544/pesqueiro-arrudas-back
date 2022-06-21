@@ -112,7 +112,9 @@ class KitchenOrderController {
     });
 
     // SOCKET
-    socket.emit('kitchen-order-created', kitchenOrderCreated);
+    if (!isMade) {
+      socket.emit('kitchen-order-created', kitchenOrderCreated);
+    }
 
     res.json({
       message: 'Pedido registrado na cozinha',
@@ -121,6 +123,7 @@ class KitchenOrderController {
   }
 
   async update(req, res) {
+    const socket = req.io;
     const { id } = req.params;
     const { isMade, products } = req.body;
 
@@ -136,6 +139,10 @@ class KitchenOrderController {
       isMade,
       products,
     });
+
+    // SOCKET
+    socket.emit('kitchen-order-updated', updatedKitchenOrder);
+
     res.json({
       message: 'Pedido da cozinha atualizado',
       kitchenOrder: updatedKitchenOrder,
