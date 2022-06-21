@@ -12,6 +12,7 @@ class CommandController {
   }
 
   async store(req, res) {
+    const socket = req.io;
     const { table, waiter, fishingType } = req.body;
 
     const hasFieldEmpty = someIsEmpty([table, waiter, fishingType]);
@@ -59,10 +60,15 @@ class CommandController {
       products,
       total: Number(commandTotal) || 0,
     });
+
+    // SOCKET
+    socket.emit('command-created', newCommand);
+
     return res.json({ message: 'Comanda adicionada', command: newCommand });
   }
 
   async update(req, res) {
+    const socket = req.io;
     const { id } = req.params;
     const { table, waiter, fishingType, isActive, products } = req.body;
 
@@ -125,13 +131,19 @@ class CommandController {
     });
 
     if (updatedCommand === null) {
-      return res.status(500).json({ message: 'Erro Interno', command: null });
+      return res
+        .status(500)
+        .json({ message: 'Erro Interno. Recarregue a página.', command: null });
     }
+
+    // SOCKET
+    socket.emit('command-updated', updatedCommand);
 
     res.json({ message: 'Comanda atualizada', command: updatedCommand });
   }
 
   async delete(req, res) {
+    const socket = req.io;
     const { id } = req.params;
 
     if (!id) {
@@ -141,6 +153,9 @@ class CommandController {
     }
 
     await CommandsRepository.delete(id);
+
+    // SOCKET
+    socket.emit('command-deleted', id);
 
     res.status(200).json({ message: 'Comanda deletada' });
   }

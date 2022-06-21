@@ -11,6 +11,7 @@ class PaymentController {
   }
 
   async pay(req, res) {
+    const socket = req.io;
     const { commandId, paymentType } = req.body;
 
     const hasSomeEmpty = someIsEmpty([commandId, paymentType]);
@@ -30,11 +31,14 @@ class PaymentController {
     }
 
     // Update the command.totalPayed to the total value to be payed
-    await CommandsRepository.update({
+    const updatedCommad = await CommandsRepository.update({
       _id: commandId,
       isActive: false,
       totalPayed: commandToPay.total,
     });
+
+    // SOCKET -> emit that command updated
+    socket.emit('command-updated', updatedCommad);
 
     // Create the payment
     const [paymentCreated] = await PaymentsRepository.create({
