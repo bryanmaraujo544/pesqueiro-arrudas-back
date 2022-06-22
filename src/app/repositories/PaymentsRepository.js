@@ -34,7 +34,7 @@ class PaymentsRepository {
     return payments;
   }
 
-  async create({ commandId, paymentType, totalPayed }) {
+  async create({ commandId, paymentType, totalPayed, waiterExtra }) {
     try {
       const createdAt = DateTime.now().toISO();
 
@@ -43,6 +43,7 @@ class PaymentsRepository {
         paymentType,
         totalPayed,
         createdAt,
+        waiterExtra,
       });
 
       const paymentStored = await newPayment.save();

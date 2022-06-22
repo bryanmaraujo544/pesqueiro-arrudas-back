@@ -20,6 +20,10 @@ const paymentSchema = new Schema({
     type: String,
     required: true,
   },
+  waiterExtra: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Payment = mongoose.model('Payment', paymentSchema);

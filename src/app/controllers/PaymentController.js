@@ -12,7 +12,7 @@ class PaymentController {
 
   async pay(req, res) {
     const socket = req.io;
-    const { commandId, paymentType } = req.body;
+    const { commandId, paymentType, waiterExtra } = req.body;
 
     const hasSomeEmpty = someIsEmpty([commandId, paymentType]);
     if (hasSomeEmpty) {
@@ -45,6 +45,7 @@ class PaymentController {
       commandId,
       paymentType,
       totalPayed: commandToPay.total,
+      waiterExtra: Number(waiterExtra),
     });
 
     // SOCKET -> emit to Home page that one payment was added
