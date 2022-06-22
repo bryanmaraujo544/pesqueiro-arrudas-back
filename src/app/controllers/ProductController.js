@@ -52,6 +52,7 @@ class ProductController {
   }
 
   async update(req, res) {
+    const socket = req.io;
     const { id } = req.params;
     const { name, imageURL, unitPrice, amount, category } = req.body;
 
@@ -89,6 +90,9 @@ class ProductController {
       imageURL,
     });
 
+    // SOCKET
+    socket.emit('product-updated', updatedProduct);
+
     return res.json({ message: 'Produto atualizado', product: updatedProduct });
   }
 
@@ -116,6 +120,7 @@ class ProductController {
   }
 
   async updateAmount(req, res) {
+    const socket = req.io;
     const { operation } = req.query;
     const { productId, amount } = req.body;
     if (!productId || (!amount && amount !== 0)) {
@@ -163,7 +168,9 @@ class ProductController {
         productId,
         amount: newAmount,
       });
+
       // SOCKET IO -> say to every device the amount decreased
+      socket.emit('product-updated', updatedProduct);
 
       return res.json({
         message: 'Quantidade do produto atualizada',
@@ -181,6 +188,8 @@ class ProductController {
       });
 
       // SOCKET IO -> say to every device the amount increase
+      socket.emit('product-updated', updatedProduct);
+
       return res.json({
         message: 'Quantidade do produto atualizada',
         product: updatedProduct,
