@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const { DateTime } = require('luxon');
 
 const { Schema } = mongoose;
 
 const paymentSchema = new Schema({
   createdAt: {
-    type: Date,
-    default: () => Date.now(),
+    type: String,
+    default: () => DateTime.now().toISO(),
   },
   totalPayed: {
     type: Number,

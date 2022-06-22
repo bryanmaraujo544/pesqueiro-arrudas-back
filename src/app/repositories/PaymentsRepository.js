@@ -6,11 +6,20 @@ class PaymentsRepository {
   async findAll({ date }) {
     const payments = await PaymentModel.find({}).populate('command');
 
-    const dt = DateTime.fromISO(date).setLocale('pt-BR');
+    const dt = DateTime.fromISO(date, { zone: 'pt-BR', setZone: true });
 
     if (date) {
       return payments.filter((payment) => {
-        const pdt = DateTime.fromJSDate(payment.createdAt).setLocale('pt-BR');
+        let pdt;
+
+        pdt = DateTime.fromISO(payment.createdAt, {
+          zone: 'pt-BR',
+          setZone: true,
+        });
+
+        if (!pdt) {
+          pdt = DateTime.fromJSDate(date, { zone: 'pt-BR', setZone: true });
+        }
 
         if (
           dt.day === pdt.day &&
@@ -27,10 +36,13 @@ class PaymentsRepository {
 
   async create({ commandId, paymentType, totalPayed }) {
     try {
+      const createdAt = DateTime.now().toISO();
+
       const newPayment = new PaymentModel({
         command: commandId,
         paymentType,
         totalPayed,
+        createdAt,
       });
 
       const paymentStored = await newPayment.save();
@@ -87,6 +99,10 @@ class PaymentsRepository {
     } catch (error) {
       console.log('Error in dropPayments', error.message);
     }
+  }
+
+  async deleteAll() {
+    await PaymentModel.deleteMany({});
   }
 }
 

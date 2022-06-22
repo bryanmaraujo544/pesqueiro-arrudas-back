@@ -5,6 +5,7 @@ const CommandController = require('./app/controllers/CommandController');
 const PaymentController = require('./app/controllers/PaymentController');
 const KitchenOrderController = require('./app/controllers/KitchenOrderController');
 const CashierController = require('./app/controllers/CashierController');
+const AdminController = require('./app/controllers/AdminController');
 
 const router = Router();
 
@@ -48,5 +49,7 @@ router.get(
 router.get('/cashiers', CashierController.index);
 router.get('/cashiers/:id', CashierController.show);
 router.post('/cashiers', CashierController.closeCashier);
+
+router.delete('/admin/payments', AdminController.deletePayments);
 
 module.exports = router;
