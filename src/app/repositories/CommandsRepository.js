@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+const { DateTime } = require('luxon');
 const CommandModel = require('../models/command');
 
 class CommandRepository {
@@ -66,17 +67,22 @@ class CommandRepository {
   }
 
   async findCurrentDayCommands({ isActive }) {
-    const todayDayInMonth = new Date().getDate();
-    const todayMonth = new Date().getMonth();
-    const todayYear = new Date().getFullYear();
+    // const todayDayInMonth = new Date().getDate();
+    // const todayMonth = new Date().getMonth();
+    // const todayYear = new Date().getFullYear();
+    const todayDate = DateTime.local().setZone('UTC-3');
 
     const allCommands = await CommandModel.find({});
-    const todayCommands = await allCommands.filter((command) => {
-      const createdAtDate = new Date(command.createdAt);
+    const todayCommands = allCommands.filter((command) => {
+      const createdAtDate = DateTime.fromISO(command.createdAt, {
+        zone: 'pt-BR',
+        setZone: true,
+      });
+
       return (
-        createdAtDate.getDate() === todayDayInMonth &&
-        createdAtDate.getMonth() === todayMonth &&
-        createdAtDate.getFullYear() === todayYear
+        createdAtDate.day === todayDate.day &&
+        createdAtDate.month === todayDate.month &&
+        createdAtDate.year === todayDate.year
       );
     });
 
@@ -122,6 +128,10 @@ class CommandRepository {
       console.log(error.message);
       return null;
     }
+  }
+
+  async deleteAll() {
+    await CommandModel.deleteMany({});
   }
 }
 

@@ -3,9 +3,9 @@ const Cashier = require('../models/Cashier');
 
 class CashiersRepository {
   async findAll(date) {
-    const cashiers = await Cashier.find({});
+    const cashiers = await Cashier.find({}).sort({ date: -1 });
 
-    const dt = DateTime.fromISO(date);
+    const dt = DateTime.fromISO(date, { zone: 'pt-BR', setZone: true });
     if (date) {
       return cashiers.filter((cashier) => {
         const cdt = DateTime.fromJSDate(cashier.date);

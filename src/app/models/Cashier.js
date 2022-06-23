@@ -7,22 +7,22 @@ const cashierSchema = new Schema({
     type: Number,
     required: true,
   },
-  date: Date,
+  date: String,
   payments: [
     {
       _id: String,
       total: Number,
       paymentType: String,
       totalPayed: Number,
+      waiterExtra: {
+        type: Number,
+        default: 0,
+      },
       command: {
         _id: String,
         table: String,
         waiter: String,
         total: Number,
-        waiterExtra: {
-          type: Number,
-          default: 0,
-        },
         products: [
           {
             _id: String,

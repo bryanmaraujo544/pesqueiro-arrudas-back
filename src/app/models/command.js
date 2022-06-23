@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const { DateTime } = require('luxon');
 
 const { Schema } = mongoose;
 
 const commandSchema = new Schema({
   createdAt: {
-    type: Date,
-    default: () => Date.now(),
+    type: String,
+    default: () => DateTime.local().setZone('UTC-3').toISO(),
   },
   table: {
     type: String,

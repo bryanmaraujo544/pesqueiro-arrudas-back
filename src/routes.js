@@ -50,6 +50,8 @@ router.get('/cashiers', CashierController.index);
 router.get('/cashiers/:id', CashierController.show);
 router.post('/cashiers', CashierController.closeCashier);
 
+// DANGER ZONE //
 router.delete('/admin/payments', AdminController.deletePayments);
+router.delete('/admin/commands', AdminController.deleteCommands);
 
 module.exports = router;

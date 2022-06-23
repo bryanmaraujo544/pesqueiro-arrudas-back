@@ -29,14 +29,17 @@ class CashierController {
       });
     }
 
-    const cashierDate = DateTime.fromISO(date);
+    const cashierDate = DateTime.fromISO(date, {
+      zone: 'pt-BR',
+      setZone: true,
+    });
     const dateDay = cashierDate.day;
     const dateMonth = cashierDate.month;
     const dateYear = cashierDate.year;
 
     const cashiers = await CashiersRepository.findAll();
     const hasSomeCashierInThisDate = cashiers.find(({ date }) => {
-      const dt = DateTime.fromJSDate(date);
+      const dt = DateTime.fromISO(date, { zone: 'pt-BR', setZone: true });
       if (
         dt.day === dateDay &&
         dt.month === dateMonth &&
@@ -58,7 +61,7 @@ class CashierController {
 
     const cashierCreated = await CashiersRepository.create({
       total: cashierTotal,
-      date,
+      date: cashierDate.toISO(),
       payments,
     });
 
