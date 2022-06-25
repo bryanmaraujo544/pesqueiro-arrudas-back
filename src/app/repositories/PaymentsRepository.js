@@ -4,7 +4,9 @@ const PaymentModel = require('../models/payment');
 
 class PaymentsRepository {
   async findAll({ date }) {
-    const payments = await PaymentModel.find({}).populate('command');
+    const payments = await PaymentModel.find({})
+      .populate('command')
+      .sort({ createdAt: -1 });
 
     const dt = DateTime.fromISO(date, { zone: 'pt-BR', setZone: true });
 
@@ -36,7 +38,7 @@ class PaymentsRepository {
 
   async create({ commandId, paymentType, totalPayed, waiterExtra }) {
     try {
-      const createdAt = DateTime.now().toISO();
+      const createdAt = DateTime.local().setZone('UTC-3');
 
       const newPayment = new PaymentModel({
         command: commandId,
