@@ -72,7 +72,10 @@ class CommandRepository {
     // const todayYear = new Date().getFullYear();
     const todayDate = DateTime.local().setZone('UTC-3');
 
-    const allCommands = await CommandModel.find({});
+    const allCommands = await CommandModel.find({}).sort({
+      table: 1,
+      createdAt: -1,
+    });
     const todayCommands = allCommands.filter((command) => {
       const createdAtDate = DateTime.fromISO(command.createdAt, {
         zone: 'pt-BR',

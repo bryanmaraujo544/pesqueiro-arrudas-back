@@ -104,6 +104,14 @@ class PaymentsRepository {
     }
   }
 
+  async deleteByCommandId(commandId) {
+    try {
+      await PaymentModel.deleteOne({ command: commandId });
+    } catch (err) {
+      return null;
+    }
+  }
+
   async deleteAll() {
     await PaymentModel.deleteMany({});
   }

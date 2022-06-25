@@ -1,4 +1,5 @@
 const CommandsRepository = require('../repositories/CommandsRepository');
+const PaymentsRepository = require('../repositories/PaymentsRepository');
 const ProductsRepository = require('../repositories/ProductsRepository');
 const { someIsEmpty } = require('../utils/someIsEmpty');
 
@@ -150,6 +151,19 @@ class CommandController {
       return res.status(400).json({
         message: 'O ID da comanda precisa ser informado para sua deleção.',
       });
+    }
+
+    const commandToDelete = await CommandsRepository.findById(id);
+    if (!commandToDelete?.isActive) {
+      // delete payment
+      const paymentResult = await PaymentsRepository.deleteByCommandId(
+        commandToDelete._id
+      );
+      if (paymentResult === null) {
+        return res.status(400).json({
+          message: 'Algo deu errado. Reinicie a página',
+        });
+      }
     }
 
     await CommandsRepository.delete(id);
