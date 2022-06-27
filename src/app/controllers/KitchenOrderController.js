@@ -1,5 +1,6 @@
 const CommandsRepository = require('../repositories/CommandsRepository');
 const KitchenOrdersRepository = require('../repositories/KitchenOrdersRepository');
+
 const gatherKitchenOrder = require('../utils/gatherKitchenOrder');
 const { someIsEmpty } = require('../utils/someIsEmpty');
 
@@ -136,7 +137,7 @@ class KitchenOrderController {
 
     const updatedKitchenOrder = await KitchenOrdersRepository.update({
       orderId: id,
-      isMade,
+      isMade: products?.length === 0 ? true : isMade,
       products,
     });
 
