@@ -71,7 +71,8 @@ class CommandController {
   async update(req, res) {
     const socket = req.io;
     const { id } = req.params;
-    const { table, waiter, fishingType, isActive, products } = req.body;
+    const { updateTotal } = req.query;
+    const { table, waiter, fishingType, isActive, products, total } = req.body;
 
     if (!id) {
       return res
@@ -93,12 +94,17 @@ class CommandController {
         .json({ message: 'Já existe uma mesa com este nome', command: null });
     }
 
-    // TODO: verify the amount of products added in stock
-
     const commandTotal = products?.reduce(
       (amount, current) => amount + current.amount * current.unitPrice,
       0
     );
+
+    // When decreasing the R$ total of command, I'm verifying if is less than the amount already payed
+    if (commandTotal < commandToUpdate.totalPayed) {
+      return res.status(400).json({
+        message: 'O total da comanda ficará menor do que já foi pago',
+      });
+    }
 
     // If any products were sended this variable will be undefined
     // so the total of the command will not be changed
@@ -107,10 +113,17 @@ class CommandController {
 
     // If any products were sended this variable will be undefined
     // so the payed total of the command will not be changed
-    const commandPayedTotal = products?.reduce(
+    const productsTotal = products?.reduce(
       (amount, current) => amount + Number(current.totalPayed),
       0
     );
+
+    const commandPayedTotal =
+      Math.round(
+        (commandToUpdate.totalPayed + (productsTotal || 0) + Number.EPSILON) *
+          100
+      ) / 100;
+
     const commandPayedTotalFormatted =
       commandPayedTotal && Number(commandPayedTotal).toFixed(2);
 
@@ -120,6 +133,11 @@ class CommandController {
         .json({ message: 'Valor pago maior que o necessário', command: null });
     }
 
+    // This total is going to be used when the user is paying part of command
+    const totalPayed =
+      Math.round((commandToUpdate.totalPayed + total + Number.EPSILON) * 100) /
+      100;
+
     const updatedCommand = await CommandsRepository.update({
       _id: id,
       table,
@@ -128,7 +146,8 @@ class CommandController {
       total: commandTotalFormatted,
       isActive,
       products,
-      totalPayed: commandPayedTotalFormatted,
+      totalPayed:
+        updateTotal === 'true' ? totalPayed : commandPayedTotalFormatted,
     });
 
     if (updatedCommand === null) {
