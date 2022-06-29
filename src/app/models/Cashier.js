@@ -12,7 +12,7 @@ const cashierSchema = new Schema({
     {
       _id: String,
       total: Number,
-      paymentType: String,
+      paymentTypes: [String],
       totalPayed: Number,
       waiterExtra: {
         type: Number,

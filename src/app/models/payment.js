@@ -16,14 +16,12 @@ const paymentSchema = new Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'Command',
   },
-  paymentType: {
-    type: String,
-    required: true,
-  },
+  paymentTypes: [String],
   waiterExtra: {
     type: Number,
     default: 0,
   },
+  observation: String,
 });
 
 const Payment = mongoose.model('Payment', paymentSchema);

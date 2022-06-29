@@ -36,16 +36,23 @@ class PaymentsRepository {
     return payments;
   }
 
-  async create({ commandId, paymentType, totalPayed, waiterExtra }) {
+  async create({
+    commandId,
+    paymentTypes,
+    totalPayed,
+    waiterExtra,
+    observation,
+  }) {
     try {
       const createdAt = DateTime.local().setZone('UTC-3');
 
       const newPayment = new PaymentModel({
         command: commandId,
-        paymentType,
+        paymentTypes,
         totalPayed,
         createdAt,
         waiterExtra,
+        observation,
       });
 
       const paymentStored = await newPayment.save();

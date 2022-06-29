@@ -72,7 +72,15 @@ class CommandController {
     const socket = req.io;
     const { id } = req.params;
     const { updateTotal } = req.query;
-    const { table, waiter, fishingType, isActive, products, total } = req.body;
+    const {
+      table,
+      waiter,
+      fishingType,
+      isActive,
+      products,
+      total,
+      paymentType,
+    } = req.body;
 
     if (!id) {
       return res
@@ -113,30 +121,36 @@ class CommandController {
 
     // If any products were sended this variable will be undefined
     // so the payed total of the command will not be changed
-    const productsTotal = products?.reduce(
-      (amount, current) => amount + Number(current.totalPayed),
-      0
-    );
+    // const productsTotal = products?.reduce(
+    //   (amount, current) => amount + Number(current.totalPayed),
+    //   0
+    // );
 
-    const commandPayedTotal =
-      Math.round(
-        (commandToUpdate.totalPayed + (productsTotal || 0) + Number.EPSILON) *
-          100
-      ) / 100;
-
-    const commandPayedTotalFormatted =
-      commandPayedTotal && Number(commandPayedTotal).toFixed(2);
-
-    if (commandPayedTotalFormatted > commandToUpdate.total) {
-      return res
-        .status(400)
-        .json({ message: 'Valor pago maior que o necessário', command: null });
-    }
-
+    // The problem is the sum below
+    // const commandPayedTotal =
+    //   Math.round(
+    //     (commandToUpdate.totalPayed + (productsTotal || 0) + Number.EPSILON) *
+    //       100
+    //   ) / 100;
     // This total is going to be used when the user is paying part of command
-    const totalPayed =
+    const newTotalPayed =
       Math.round((commandToUpdate.totalPayed + total + Number.EPSILON) * 100) /
       100;
+
+    // const commandPayedTotal =
+    //   Math.round((commandToUpdate.totalPayed + Number.EPSILON) * 100) / 100;
+
+    // const commandPayedTotalFormatted =
+    //   commandPayedTotal && Number(commandPayedTotal).toFixed(2);
+
+    if (newTotalPayed > commandToUpdate.total) {
+      return res.status(400).json({
+        message: 'Valor pago maior que o necessário para a comanda',
+        command: null,
+      });
+    }
+
+    const paymentTypes = [...commandToUpdate.paymentTypes, paymentType];
 
     const updatedCommand = await CommandsRepository.update({
       _id: id,
@@ -146,8 +160,8 @@ class CommandController {
       total: commandTotalFormatted,
       isActive,
       products,
-      totalPayed:
-        updateTotal === 'true' ? totalPayed : commandPayedTotalFormatted,
+      totalPayed: updateTotal === 'true' ? newTotalPayed : undefined,
+      paymentTypes: paymentTypes.filter(Boolean),
     });
 
     if (updatedCommand === null) {

@@ -12,9 +12,9 @@ class PaymentController {
 
   async pay(req, res) {
     const socket = req.io;
-    const { commandId, paymentType, waiterExtra } = req.body;
+    const { commandId, paymentTypes, waiterExtra, observation } = req.body;
 
-    const hasSomeEmpty = someIsEmpty([commandId, paymentType]);
+    const hasSomeEmpty = someIsEmpty([commandId, paymentTypes]);
     if (hasSomeEmpty) {
       return res.status(400).json({
         message: 'Campos necessários não foram informados',
@@ -43,9 +43,10 @@ class PaymentController {
     // Create the payment
     const [paymentCreated] = await PaymentsRepository.create({
       commandId,
-      paymentType,
+      paymentTypes,
       totalPayed: commandToPay.total,
       waiterExtra: Number(waiterExtra),
+      observation,
     });
 
     // SOCKET -> emit to Home page that one payment was added
