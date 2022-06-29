@@ -107,11 +107,11 @@ class ProductController {
     }
 
     const productToVerify = await ProductsRepository.findById(productId);
-    const isProductWithoutAmount = isOneSpecialProduct(productToVerify.name);
+    const isProductWithoutAmount = isOneSpecialProduct(productToVerify?.name);
 
     if (amount > productToVerify.amount && !isProductWithoutAmount) {
       return res.status(400).json({
-        message: 'Quantidade maior do que o estoque do produto',
+        message: `Quantidade de (${productToVerify?.name}) indisponível.`,
         isInStock: false,
       });
     }
