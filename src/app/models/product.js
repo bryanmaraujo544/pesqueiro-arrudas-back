@@ -10,6 +10,10 @@ const productSchema = new Schema({
   },
   imageURL: String,
   category: String,
+  isFavorite: {
+    type: Boolean,
+    default: false,
+  },
   unitPrice: {
     type: Number,
     required: true,

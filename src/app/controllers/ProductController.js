@@ -53,10 +53,13 @@ class ProductController {
 
   async update(req, res) {
     const socket = req.io;
-    const { id } = req.params;
-    const { name, imageURL, unitPrice, amount, category } = req.body;
 
-    if (!imageURL && imageURL !== '') {
+    const { isUpdateFavorite } = req.query;
+    const { id } = req.params;
+    const { name, imageURL, unitPrice, amount, category, isFavorite } =
+      req.body;
+
+    if (!imageURL && imageURL !== '' && !isUpdateFavorite) {
       return res.status(400).json({
         message: 'Campos obrigatórios foram esquecidos.',
         product: null,
@@ -65,7 +68,7 @@ class ProductController {
 
     const hasFieldEmpty = someIsEmpty([name, unitPrice, amount, category]);
 
-    if (hasFieldEmpty) {
+    if (hasFieldEmpty && !isUpdateFavorite) {
       return res.status(400).json({
         message: 'Campos obrigatórios foram esquecidos.',
         product: null,
@@ -88,6 +91,7 @@ class ProductController {
       unitPrice,
       amount,
       imageURL,
+      isFavorite,
     });
 
     // SOCKET

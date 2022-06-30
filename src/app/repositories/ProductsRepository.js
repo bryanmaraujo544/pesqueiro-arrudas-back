@@ -33,8 +33,28 @@ class ProductsRepository {
     console.log({ hasProduct });
   }
 
-  async update({ id, name, category, unitPrice, amount, imageURL }) {
+  async update({
+    id,
+    name,
+    category,
+    unitPrice,
+    amount,
+    imageURL,
+    isFavorite,
+  }) {
     const oldProduct = await ProductModel.findOne({ _id: id });
+    if (isFavorite === false || isFavorite === true) {
+      await ProductModel.updateOne(
+        { _id: id },
+        {
+          $set: {
+            isFavorite,
+          },
+        }
+      );
+      const updatedProduct = await ProductModel.findOne({ _id: id });
+      return updatedProduct;
+    }
 
     oldProduct.overwrite({
       name,
