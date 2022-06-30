@@ -2,7 +2,7 @@ const ProductModel = require('../models/product');
 
 class ProductsRepository {
   async findAll() {
-    const products = await ProductModel.find({});
+    const products = await ProductModel.find({}).sort({ isFavorite: -1 });
     return products;
   }
 
