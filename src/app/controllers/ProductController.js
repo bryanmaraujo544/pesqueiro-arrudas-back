@@ -59,13 +59,6 @@ class ProductController {
     const { name, imageURL, unitPrice, amount, category, isFavorite } =
       req.body;
 
-    if (!imageURL && imageURL !== '' && !isUpdateFavorite) {
-      return res.status(400).json({
-        message: 'Campos obrigatórios foram esquecidos.',
-        product: null,
-      });
-    }
-
     const hasFieldEmpty = someIsEmpty([name, unitPrice, amount, category]);
 
     if (hasFieldEmpty && !isUpdateFavorite) {
