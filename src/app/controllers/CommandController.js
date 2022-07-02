@@ -119,29 +119,9 @@ class CommandController {
     const commandTotalFormatted =
       commandTotal && Number(commandTotal).toFixed(2);
 
-    // If any products were sended this variable will be undefined
-    // so the payed total of the command will not be changed
-    // const productsTotal = products?.reduce(
-    //   (amount, current) => amount + Number(current.totalPayed),
-    //   0
-    // );
-
-    // The problem is the sum below
-    // const commandPayedTotal =
-    //   Math.round(
-    //     (commandToUpdate.totalPayed + (productsTotal || 0) + Number.EPSILON) *
-    //       100
-    //   ) / 100;
-    // This total is going to be used when the user is paying part of command
     const newTotalPayed =
       Math.round((commandToUpdate.totalPayed + total + Number.EPSILON) * 100) /
       100;
-
-    // const commandPayedTotal =
-    //   Math.round((commandToUpdate.totalPayed + Number.EPSILON) * 100) / 100;
-
-    // const commandPayedTotalFormatted =
-    //   commandPayedTotal && Number(commandPayedTotal).toFixed(2);
 
     if (newTotalPayed > commandToUpdate.total) {
       return res.status(400).json({
@@ -190,7 +170,7 @@ class CommandController {
     if (!commandToDelete?.isActive) {
       // delete payment
       const paymentResult = await PaymentsRepository.deleteByCommandId(
-        commandToDelete._id
+        commandToDelete?._id
       );
       if (paymentResult === null) {
         return res.status(400).json({
