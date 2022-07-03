@@ -54,10 +54,11 @@ class CashierController {
       await CashiersRepository.delete(hasSomeCashierInThisDate._id.valueOf());
     }
 
-    const cashierTotal = payments.reduce((acc, cur) => {
-      const total = (acc.totalPayed * 100 + cur.totalPayed * 100) / 100;
-      return { totalPayed: total };
-    }).totalPayed;
+    const cashierTotal = payments.reduce(
+      (total, cur) =>
+        Number(((total * 100 + cur.totalPayed * 100) / 100).toFixed(2)),
+      0
+    );
 
     const cashierCreated = await CashiersRepository.create({
       total: cashierTotal,
