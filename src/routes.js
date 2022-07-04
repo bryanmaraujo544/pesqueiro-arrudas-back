@@ -6,6 +6,7 @@ const PaymentController = require('./app/controllers/PaymentController');
 const KitchenOrderController = require('./app/controllers/KitchenOrderController');
 const CashierController = require('./app/controllers/CashierController');
 const AdminController = require('./app/controllers/AdminController');
+const assurePassword = require('./app/middlewares/assurePassword');
 
 const router = Router();
 
@@ -51,7 +52,7 @@ router.get('/cashiers/:id', CashierController.show);
 router.post('/cashiers', CashierController.closeCashier);
 
 // DANGER ZONE //
-router.delete('/admin/payments', AdminController.deletePayments);
-router.delete('/admin/commands', AdminController.deleteCommands);
+router.post('/admin/payments', assurePassword, AdminController.deletePayments);
+router.post('/admin/commands', assurePassword, AdminController.deleteCommands);
 
 module.exports = router;
