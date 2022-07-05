@@ -22,6 +22,10 @@ const commandSchema = new Schema({
   totalPayed: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
   paymentTypes: [String],
+  discount: {
+    type: Number,
+    default: 0,
+  },
   products: [
     {
       _id: {

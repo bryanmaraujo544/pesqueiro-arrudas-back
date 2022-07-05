@@ -80,6 +80,7 @@ class CommandController {
       products,
       total,
       paymentType,
+      discount,
     } = req.body;
 
     if (!id) {
@@ -140,6 +141,7 @@ class CommandController {
       total: commandTotalFormatted,
       isActive,
       products,
+      discount,
       totalPayed: updateTotal === 'true' ? newTotalPayed : undefined,
       paymentTypes: paymentTypes.filter(Boolean),
     });

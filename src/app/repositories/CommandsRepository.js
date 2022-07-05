@@ -32,6 +32,7 @@ class CommandRepository {
     products,
     totalPayed,
     paymentTypes,
+    discount,
   }) {
     try {
       await CommandModel.updateOne(
@@ -44,6 +45,7 @@ class CommandRepository {
             total,
             isActive,
             products,
+            discount,
             totalPayed: totalPayed && Number(totalPayed),
             paymentTypes,
           },
