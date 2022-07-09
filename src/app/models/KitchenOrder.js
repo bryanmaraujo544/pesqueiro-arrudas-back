@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
+const { DateTime } = require('luxon');
 
 const kitchenOrderSchema = new Schema({
   createdAt: {
     type: Date,
-    default: () => Date.now(),
+    default: () => DateTime.local().setZone('UTC-3'),
   },
   commandId: {
     type: String,
