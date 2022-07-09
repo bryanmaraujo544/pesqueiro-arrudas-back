@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
+const compression = require('compression');
 
 const { Server } = require('socket.io');
 const connectDB = require('./database/index');
@@ -49,6 +50,7 @@ const io = createApplication(
 );
 
 app.use(cors());
+app.use(compression());
 app.use(express.json());
 // eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {

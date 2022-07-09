@@ -59,6 +59,9 @@ class ProductController {
     const { name, imageURL, unitPrice, amount, category, isFavorite } =
       req.body;
 
+    // console.log({ name });
+    console.log('name');
+
     const hasFieldEmpty = someIsEmpty([name, unitPrice, amount, category]);
 
     if (hasFieldEmpty && !isUpdateFavorite) {
