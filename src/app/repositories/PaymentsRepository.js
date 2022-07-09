@@ -70,7 +70,8 @@ class PaymentsRepository {
     try {
       const payments = await PaymentModel.find({});
       const paymentsOf10DayAgo = payments.filter(({ createdAt }) => {
-        const dt = DateTime.fromJSDate(createdAt).setLocale('pt-BR');
+        const dt = DateTime.fromISO(createdAt).setLocale('pt-BR');
+        console.log({ dt });
 
         if (
           dt.day === date.day &&
@@ -89,22 +90,17 @@ class PaymentsRepository {
       const paymentsIds = paymentsOf10DayAgo.map(({ _id }) => _id.valueOf());
 
       if (paymentsIds.length > 0) {
-        paymentsIds?.forEach((_id) => {
-          (async () => {
-            await PaymentModel.deleteOne({ _id });
-          })();
-        });
+        await Promise.all(
+          paymentsIds?.map((_id) => PaymentModel.deleteOne({ _id }))
+        );
       }
 
       const commandsIds = paymentsOf10DayAgo.map(({ command }) =>
         command.valueOf()
       );
 
-      commandsIds.forEach((_id) => {
-        (async () => {
-          await Command.deleteOne({ _id });
-        })();
-      });
+      await Promise.all(commandsIds.map((_id) => Command.deleteOne({ _id })));
+
       return;
     } catch (error) {
       console.log('Error in dropPayments', error.message);
