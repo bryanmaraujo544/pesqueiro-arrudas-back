@@ -5,8 +5,8 @@ const { DateTime } = require('luxon');
 
 const kitchenOrderSchema = new Schema({
   createdAt: {
-    type: Date,
-    default: () => DateTime.local().setZone('UTC-3'),
+    type: String,
+    default: () => DateTime.local().setZone('UTC-3').toISO(),
   },
   commandId: {
     type: String,
