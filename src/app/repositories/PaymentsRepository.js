@@ -71,7 +71,6 @@ class PaymentsRepository {
       const payments = await PaymentModel.find({});
       const paymentsOf10DayAgo = payments.filter(({ createdAt }) => {
         const dt = DateTime.fromISO(createdAt).setLocale('pt-BR');
-        console.log({ dt });
 
         if (
           dt.day === date.day &&
