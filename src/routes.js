@@ -15,6 +15,10 @@ router.get('/', (req, res) => {
 });
 
 router.post('/auth/login', AuthController.index);
+router.post(
+  '/auth/access-closed-cashiers',
+  AuthController.accessClosedCashiers
+);
 
 // Products Routes
 router.get('/products', ProductController.index);

@@ -18,22 +18,7 @@ connectDB();
 function createApplication(httpServer, components, serverOptions = {}) {
   const io = new Server(httpServer, serverOptions);
 
-  io.on('connection', (socket) => {
-    console.log(`User Connected: ${socket.id}`);
-    // socket.on('join_room', (payload) => {
-    //   socket.join(payload.roomId);
-
-    //   // return GameroomsRepository.stJoinRoom({ payload, socket });
-    // });
-
-    // socket.on('rooms_opened', (payload) =>
-    //   // RoomsRepository.findAll({ payload, socket })
-    // );
-
-    // socket.on('participant_left_room', (payload) =>
-    //   // ParticipantsRepository.stRemoveParticipant({ payload, socket })
-    // );
-  });
+  io.on('connection', (socket) => {});
 
   return io;
 }
