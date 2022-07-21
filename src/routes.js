@@ -11,7 +11,7 @@ const assurePassword = require('./app/middlewares/assurePassword');
 const router = Router();
 
 router.get('/', (req, res) => {
-  res.send('Pesqueiro Arrudas API');
+  res.send('ResFish App');
 });
 
 router.post('/auth/login', AuthController.index);
